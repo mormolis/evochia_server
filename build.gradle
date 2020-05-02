@@ -3,6 +3,7 @@ plugins {
 	id 'io.spring.dependency-management' version '1.0.9.RELEASE'
 	id 'java'
 	id 'idea'
+	id "org.flywaydb.flyway" version "6.4.1"
 }
 
 group = 'com.multipartyloops'
@@ -21,6 +22,7 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.15'
 	implementation 'org.flywaydb:flyway-core'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'mysql:mysql-connector-java'
@@ -32,4 +34,16 @@ dependencies {
 
 test {
 	useJUnitPlatform()
+}
+
+
+flyway {
+	url = 'jdbc:mysql://localhost:3306/evochia_dev'
+	user = 'evochia_developer'
+	password = 'apassword'
+//	schemas = ['schema1', 'schema2', 'schema3']
+//	placeholders = [
+//			'keyABC': 'valueXYZ',
+//			'otherplaceholder': 'value123'
+//	]
 }
