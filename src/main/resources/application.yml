@@ -1,11 +1,11 @@
+
 spring:
   profiles: dev
 
-db:
-  url: "jdbc:mysql://localhost:3306/evochia_dev"
-  username: "evochia_developer"
-  password: "apassword"
-
+  datasource:
+    url: "jdbc:mysql://localhost:3306/evochia_dev"
+    username: "evochia_developer"
+    password: "apassword"
 ---
 spring:
   profiles: prod

@@ -21,10 +21,12 @@ repositories {
 }
 
 dependencies {
+
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.15'
+	compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.3.1.RELEASE'
 	implementation 'org.flywaydb:flyway-core'
 	compileOnly 'org.projectlombok:lombok'
+	compile 'org.springframework.boot:spring-boot-starter-jdbc'
 	runtimeOnly 'mysql:mysql-connector-java'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
@@ -41,9 +43,4 @@ flyway {
 	url = 'jdbc:mysql://localhost:3306/evochia_dev'
 	user = 'evochia_developer'
 	password = 'apassword'
-//	schemas = ['schema1', 'schema2', 'schema3']
-//	placeholders = [
-//			'keyABC': 'valueXYZ',
-//			'otherplaceholder': 'value123'
-//	]
 }
