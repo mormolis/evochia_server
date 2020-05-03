@@ -2,26 +2,21 @@ package com.multipartyloops.evochia.persistance.user;
 
 import com.multipartyloops.evochia.entities.users.Roles;
 import com.multipartyloops.evochia.entities.users.UserDto;
-import com.multipartyloops.evochia.persistance.exceptions.RowNotFoundException;
 import com.multipartyloops.evochia.persistance.UuidPersistenceTransformer;
+import com.multipartyloops.evochia.persistance.exceptions.RowNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 import java.util.UUID;
+
+import static com.multipartyloops.evochia.persistance.user.UserSQLStatements.*;
 
 @Component
 public class UserJDBCRepository implements UserRepository<UserDto> {
-
-    //naming convention {TABLE_NAME}_{OPERATION}
-    private static final String USERS_INSERTION = "INSERT INTO users (user_id, username, password, name, telephone) VALUES (?, ?, ?, ?, ?)";
-    private static final String ROLES_INSERTION = "INSERT INTO roles (role_id, user_id, role) VALUES (?, ?, ?)";
-    public static final String USERS_SELECT_BY_ID = "SELECT * FROM users WHERE user_id=?";
-    public static final String USERS_SELECT_BY_USERNAME = "SELECT * FROM users WHERE username=?";
-    public static final String ROLES_SELECT_BY_USER_ID = "SELECT role FROM roles WHERE user_id=?";
 
     private final JdbcTemplate jdbcTemplate;
     private final UuidPersistenceTransformer uuidPersistenceTransformer;
@@ -33,10 +28,8 @@ public class UserJDBCRepository implements UserRepository<UserDto> {
 
     @Override
     public UserDto getUserById(String id) {
-        byte[] binaryUserId = uuidPersistenceTransformer.fromString(id);
-
+        Object binaryUserId = uuidPersistenceTransformer.fromString(id);
         List<Roles> roles = jdbcTemplate.query(ROLES_SELECT_BY_USER_ID, this::roleFromResultSet, binaryUserId);
-
         UserDto user = getUserByIdWithoutRole(binaryUserId);
         user.setRoles(roles);
         return user;
@@ -46,9 +39,8 @@ public class UserJDBCRepository implements UserRepository<UserDto> {
     public UserDto getUserByUsername(String username) {
 
         UserDto user = getUserByUsernameWithoutRole(username);
-        List<Roles> roles = jdbcTemplate.query(ROLES_SELECT_BY_USER_ID, (resultSet, _rowNum) -> {
-            return Roles.valueOf(resultSet.getString("role"));
-        }, uuidPersistenceTransformer.fromString(user.getUserId()));
+        Object userIdInBytes = uuidPersistenceTransformer.fromString(user.getUserId());
+        List<Roles> roles = getRolesByUserId(userIdInBytes);
         user.setRoles(roles);
         return user;
     }
@@ -56,7 +48,7 @@ public class UserJDBCRepository implements UserRepository<UserDto> {
     @Override
     public void storeUser(UserDto user) {
 
-        byte[] binaryUserId = uuidPersistenceTransformer.fromString(user.getUserId());
+        Object binaryUserId = uuidPersistenceTransformer.fromString(user.getUserId());
 
         jdbcTemplate.update(USERS_INSERTION, binaryUserId, user.getUsername(), user.getPassword(), user.getName(), user.getTelephone());
 
@@ -66,22 +58,40 @@ public class UserJDBCRepository implements UserRepository<UserDto> {
     }
 
     @Override
-    public boolean updateUser(UserDto user) {
-        return false;
+    public void updateUser(UserDto user) {
+        Object binaryUserId = uuidPersistenceTransformer.fromString(user.getUserId());
+        jdbcTemplate.update(USERS_UPDATE, user.getUsername(), user.getPassword(), user.getName(), user.getTelephone(), binaryUserId);
+        List<Roles> existingRoles = getRolesByUserId(binaryUserId);
+        List<Roles> newRoles = user.getRoles();
+
+        updateRoles(binaryUserId, existingRoles, newRoles);
     }
 
     @Override
-    public Set<UserDto> getAllUsers() {
-        return null;
+    public List<UserDto> getAllUsers() {
+
+        List<UserDto> allUsers = jdbcTemplate.query(USERS_SELECT_STAR, this::parseUser);
+        populateUserWithTheirRoles(allUsers);
+        return allUsers;
     }
+
 
     @Override
-    public Set<UserDto> getAllUsersByRole(Roles role) {
-        return null;
+    public List<UserDto> getAllUsersByRole(Roles role) {
+
+        List<byte[]> userIds = jdbcTemplate.query(ROLES_SELECT_USER_ID_BY_ROLE, this::getUserId, role.name());
+        List<UserDto> users = new ArrayList<>();
+        // think about returning the users without the roles to make it faster
+        userIds.forEach(userId -> {
+            UserDto userById = getUserById(uuidPersistenceTransformer.getUUIDFromBytes(userId));
+            users.add(userById);
+        });
+
+        return users;
     }
 
 
-    private UserDto getUserByIdWithoutRole(byte[] binaryUserId) {
+    private UserDto getUserByIdWithoutRole(Object binaryUserId) {
         List<UserDto> queryResults = jdbcTemplate.query(USERS_SELECT_BY_ID, this::parseUser, binaryUserId);
         if (queryResults.size() == 1) {
             return queryResults.get(0);
@@ -103,11 +113,46 @@ public class UserJDBCRepository implements UserRepository<UserDto> {
         user.setUsername(resultSet.getString("username"));
         user.setPassword(resultSet.getString("password"));
         user.setName(resultSet.getString("name"));
-        user.setPassword(resultSet.getString("telephone"));
+        user.setTelephone(resultSet.getString("telephone"));
         return user;
     }
 
-    private  Roles roleFromResultSet(ResultSet resultSet, int _rowNum) throws SQLException {
+    private List<Roles> getRolesByUserId(Object userIdInBytes) {
+        return jdbcTemplate.query(
+                ROLES_SELECT_BY_USER_ID,
+                (resultSet, _rowNum) -> Roles.valueOf(resultSet.getString("role")),
+                userIdInBytes
+        );
+    }
+
+    private Roles roleFromResultSet(ResultSet resultSet, int _rowNum) throws SQLException {
         return Roles.valueOf(resultSet.getString("role"));
     }
+
+    private void updateRoles(Object binaryUserId, List<Roles> existingRoles, List<Roles> newRoles) {
+        existingRoles.forEach(existingRole -> {
+            if (!newRoles.contains(existingRole)) {
+                jdbcTemplate.update(ROLES_DELETE_BY_USER_ID_AND_ROLE, binaryUserId, existingRole.name());
+            }
+        });
+
+        newRoles.forEach(newRole -> {
+            if (!existingRoles.contains(newRole)) {
+                jdbcTemplate.update(ROLES_INSERTION, uuidPersistenceTransformer.fromString(UUID.randomUUID().toString()), binaryUserId, newRole.name());
+
+            }
+        });
+    }
+
+    private void populateUserWithTheirRoles(List<UserDto> allUsers) {
+        allUsers.forEach(user -> {
+            List<Roles> usersRoles = getRolesByUserId(uuidPersistenceTransformer.fromString(user.getUserId()));
+            user.setRoles(usersRoles);
+        });
+    }
+
+    private byte[] getUserId(ResultSet resultSet, int _int) throws SQLException {
+        return resultSet.getBytes("user_id");
+    }
+
 }

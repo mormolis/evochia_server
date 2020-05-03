@@ -1,0 +1,6 @@
+INSERT INTO users (user_id, username, password, name, telephone) VALUES ("3f910b80-573c-4899-a261-10b000d3e9b7", "mormolis", "a_password", "Giorgis", "07491000000");
+INSERT INTO roles (role_id, user_id, role) VALUES ("573c573c-573c-573c-573c-00d3e10b09b7", "3f910b80-573c-4899-a261-10b000d3e9b7", "ADMIN");
+INSERT INTO roles (role_id, user_id, role) VALUES ("10b010b0-573c-573c-573c-00d3e10b09b7", "3f910b80-573c-4899-a261-10b000d3e9b7", "STAFF");
+
+INSERT INTO users (user_id, username, password, name, telephone) VALUES ("4g121c91-100c-3909-b261-00d310b0e9b7", "sureolis", "another_password", "Giannio", "07491000001");
+INSERT INTO roles (role_id, user_id, role) VALUES ("c0b000c0-573c-573c-573c-00d3e10b09b7", "4g121c91-100c-3909-b261-00d310b0e9b7", "STAFF");

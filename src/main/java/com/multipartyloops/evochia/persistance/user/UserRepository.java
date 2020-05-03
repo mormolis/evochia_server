@@ -2,7 +2,7 @@ package com.multipartyloops.evochia.persistance.user;
 
 import com.multipartyloops.evochia.entities.users.Roles;
 
-import java.util.Set;
+import java.util.List;
 
 
 public interface UserRepository<T> {
@@ -13,9 +13,9 @@ public interface UserRepository<T> {
 
     void storeUser(T user);
 
-    boolean updateUser(T user);
+    void updateUser(T user);
 
-    Set<T> getAllUsers();
+    List<T> getAllUsers();
 
-    Set<T> getAllUsersByRole(Roles role);
+    List<T> getAllUsersByRole(Roles role);
 }

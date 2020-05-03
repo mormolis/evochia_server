@@ -38,7 +38,7 @@ public class UserService {
         return userId;
     }
 
-    public boolean updateUser(String userId,
+    public void updateUser(String userId,
                               Optional<String> username,
                               Optional<String> password,
                               Optional<String> name,
@@ -56,7 +56,7 @@ public class UserService {
 
         Optional<String> encryptedPassword = password.flatMap(newPassword -> Optional.of(passwordEncoder.encode(password.get())));
         updatedUser.setPassword(encryptedPassword.orElse(user.getPassword()));
-        return userRepository.updateUser(updatedUser);
+        userRepository.updateUser(updatedUser);
     }
 
 
