@@ -7,9 +7,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -30,6 +31,7 @@ public class UserService {
     public UserDto getUserByUsername(String username) {
         return userRepository.getUserByUsername(username);
     }
+
     public String addNewUser(String username, String password, String name, String telephone, List<Roles> roles) {
 
         String userId = UUID.randomUUID().toString();
@@ -38,26 +40,78 @@ public class UserService {
         return userId;
     }
 
-    public void updateUser(String userId,
-                              Optional<String> username,
-                              Optional<String> password,
-                              Optional<String> name,
-                              Optional<String> telephone,
-                              Optional<List<Roles>> roles) {
+    public void updateUser(UserDto newUser) {
 
-        UserDto user = userRepository.getUserById(userId);
-        UserDto updatedUser = new UserDto();
-        updatedUser.setUserId(userId);
-        updatedUser.setName(username.orElse(user.getName()));
-        updatedUser.setTelephone(telephone.orElse(user.getTelephone()));
-        updatedUser.setUsername(username.orElse(user.getUsername()));
-        updatedUser.setRoles(roles.orElse(user.getRoles()));
-        updatedUser.setName(name.orElse(user.getName()));
+        checkUserIdIsPassed(newUser);
 
-        Optional<String> encryptedPassword = password.flatMap(newPassword -> Optional.of(passwordEncoder.encode(password.get())));
-        updatedUser.setPassword(encryptedPassword.orElse(user.getPassword()));
+        UserDto user = userRepository.getUserById(newUser.getUserId());
+        UserDto updatedUser = constructUpdatedUser(newUser, user);
+
         userRepository.updateUser(updatedUser);
     }
 
+    public List<UserDto> getAllUsers(){
+        return userRepository.getAllUsers()
+                .stream()
+                .map(this::excludeThePassword)
+                .collect(Collectors.toList());
+    }
 
+
+    public List<UserDto> getAllUsersByRole(Roles... roles){
+
+        return Arrays.stream(roles)
+                .map(userRepository::getAllUsersByRole)
+                .flatMap(list-> list.stream().map(this::excludeThePassword))
+                .collect(Collectors.toList());
+    }
+
+    private UserDto excludeThePassword(UserDto user) {
+        return new UserDto(user.getUserId(),
+                user.getUsername(),
+                null,
+                user.getRoles(),
+                user.getName(),
+                user.getTelephone()
+        );
+    }
+
+    private void checkUserIdIsPassed(UserDto newUser) {
+        String userIdToUpdate = newUser.getUserId();
+        if(userIdToUpdate == null || "".equals(userIdToUpdate)) {
+            throw new IllegalArgumentException("Cannot update user with no userId");
+        }
+    }
+
+    private UserDto constructUpdatedUser(UserDto newUser, UserDto oldUser) {
+        return new UserDto(
+                newUser.getUserId(),
+                oldOrUpdated(oldUser.getUsername(), newUser.getUsername()),
+                updatePassword(oldUser.getPassword(), newUser.getPassword()),
+                oldRolesOrUpdateRoles(oldUser.getRoles(), newUser.getRoles()),
+                oldOrUpdated(oldUser.getName(), newUser.getName()),
+                oldOrUpdated(oldUser.getTelephone(), newUser.getTelephone())
+        );
+    }
+
+    private String oldOrUpdated(String oldValue, String newValue){
+        if(newValue == null || "".equals(newValue)){
+            return oldValue;
+        }
+        return newValue;
+    }
+
+    private String updatePassword(String oldPassword, String newPassword){
+        if(newPassword == null || "".equals(newPassword)){
+            return oldPassword;
+        }
+        return passwordEncoder.encode(newPassword);
+    }
+
+    private  List<Roles> oldRolesOrUpdateRoles(List<Roles> oldRoles, List<Roles> newRoles) {
+        if (newRoles != null) {
+            return newRoles;
+        }
+        return oldRoles;
+    }
 }

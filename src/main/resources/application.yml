@@ -8,4 +8,8 @@ spring:
     password: "apassword"
 ---
 spring:
-  profiles: prod
+  profiles: test
+  datasource:
+    url: "jdbc:mysql://localhost:3306/evochia_test"
+    username: "evochia_developer"
+    password: "apassword"
