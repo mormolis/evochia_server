@@ -3,6 +3,7 @@ package com.multipartyloops.evochia.core;
 import com.multipartyloops.evochia.core.commons.PasswordService;
 import com.multipartyloops.evochia.entities.users.Roles;
 import com.multipartyloops.evochia.entities.users.UserDto;
+import com.multipartyloops.evochia.entrypoints.exceptions.CannotUpdateDeactivatedUserException;
 import com.multipartyloops.evochia.persistance.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -122,7 +123,7 @@ class UserServiceTest {
     }
 
     @Test
-    void userIsDeactivatedByAssigningTheRoleDeactivatedToTheirUserId(){
+    void userIsDeactivatedByAssigningTheRoleDeactivatedToTheirUserId() {
         UserDto userDetails = new UserDto(A_USER_ID, "aUsername", "anOldPass", List.of(Roles.ADMIN, Roles.STAFF), "aName", "anOldTelephone");
         UserDto deactivatedUser = new UserDto(A_USER_ID, A_USER_ID, "random_pass", List.of(Roles.DEACTIVATED), null, null);
         given(userRepositoryMock.getUserById(A_USER_ID)).willReturn(userDetails);
@@ -131,6 +132,17 @@ class UserServiceTest {
         userService.deactivateUser(A_USER_ID);
 
         then(userRepositoryMock).should().updateUser(deactivatedUser);
+    }
+
+    @Test
+    void userCannotBeUpdatedWhenDeactivated() {
+        UserDto userDetails = new UserDto(A_USER_ID, A_USER_ID, "a_pass", List.of(Roles.DEACTIVATED), null, null);
+        given(userRepositoryMock.getUserById(A_USER_ID)).willReturn(userDetails);
+
+        assertThatThrownBy(() -> userService.updateUser(userDetails))
+                .isInstanceOf(CannotUpdateDeactivatedUserException.class)
+                .hasMessage("User is deactivated.");
+
     }
 
     @Test

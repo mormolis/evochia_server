@@ -21,6 +21,12 @@ public class EvochiaExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 
+    @ExceptionHandler(value = {CannotUpdateDeactivatedUserException.class})
+    protected ResponseEntity<Object> conflict(RuntimeException ex, WebRequest request) {
+        Object bodyOfResponse = new ErrorResponseBody(ex.getMessage());
+        return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.CONFLICT, request);
+    }
+
     //TODO: think about the NumberFormatException
     @ExceptionHandler(value = {RowNotFoundException.class, NumberFormatException.class})
     protected ResponseEntity<Object> valueNotFound(RuntimeException ex, WebRequest request) {

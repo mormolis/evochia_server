@@ -3,6 +3,7 @@ package com.multipartyloops.evochia.core;
 import com.multipartyloops.evochia.core.commons.PasswordService;
 import com.multipartyloops.evochia.entities.users.Roles;
 import com.multipartyloops.evochia.entities.users.UserDto;
+import com.multipartyloops.evochia.entrypoints.exceptions.CannotUpdateDeactivatedUserException;
 import com.multipartyloops.evochia.persistance.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,6 +47,11 @@ public class UserService {
         checkUserIdIsPassed(newUser.getUserId());
 
         UserDto user = userRepository.getUserById(newUser.getUserId());
+
+        if(user.getRoles().contains(DEACTIVATED)){
+            throw new CannotUpdateDeactivatedUserException("User is deactivated.");
+        }
+
         UserDto updatedUser = constructUpdatedUser(newUser, user);
 
         userRepository.updateUser(updatedUser);
