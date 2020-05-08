@@ -1,5 +1,6 @@
 package com.multipartyloops.evochia.core;
 
+import com.multipartyloops.evochia.core.commons.PasswordService;
 import com.multipartyloops.evochia.entities.users.Roles;
 import com.multipartyloops.evochia.entities.users.UserDto;
 import com.multipartyloops.evochia.persistance.user.UserRepository;
@@ -9,7 +10,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,49 +29,48 @@ class UserServiceTest {
     private UserRepository<UserDto> userRepositoryMock;
 
     @Mock
-    private PasswordEncoder passwordEncoderMock;
+    private PasswordService passwordServiceMock;
 
     private UserService userService;
 
 
     @BeforeEach
     void setup() {
-        userService = new UserService(userRepositoryMock, passwordEncoderMock);
+        userService = new UserService(userRepositoryMock, passwordServiceMock);
     }
 
 
     @Test
     void getUserByIdWillCallTheUserRepositoryAndWillReturnUser() {
-        UserDto expectedUser = new UserDto();
-        expectedUser.setUserId(A_USER_ID);
+        UserDto userStoredInRepository = userStoredInRepositoryWithoutThePassword();
+        userStoredInRepository.setPassword("aPassword");
         given(userRepositoryMock.getUserById(A_USER_ID))
-                .willReturn(expectedUser);
+                .willReturn(userStoredInRepository);
 
         UserDto userById = userService.getUserById(A_USER_ID);
 
         then(userRepositoryMock).should().getUserById(A_USER_ID);
-        assertThat(userById).isEqualTo(expectedUser);
-
+        assertThat(userById).isEqualTo(userStoredInRepositoryWithoutThePassword());
     }
 
     @Test
     void canGetUserByUserName() {
-        UserDto expectedUser = new UserDto();
-        expectedUser.setUsername(A_USER_NAME);
+        UserDto expectedUser = userStoredInRepositoryWithoutThePassword();
+        expectedUser.setPassword("aPassword");
         given(userRepositoryMock.getUserByUsername(A_USER_NAME))
                 .willReturn(expectedUser);
 
         UserDto userByUsername = userService.getUserByUsername(A_USER_NAME);
 
         then(userRepositoryMock).should().getUserByUsername(A_USER_NAME);
-        assertThat(userByUsername).isEqualTo(expectedUser);
+        assertThat(userByUsername).isEqualTo(userStoredInRepositoryWithoutThePassword());
     }
 
     @Test
     void addsANewUser() {
         ArgumentCaptor<UserDto> argumentCaptor = ArgumentCaptor.forClass(UserDto.class);
         willDoNothing().given(userRepositoryMock).storeUser(argumentCaptor.capture());
-        given(passwordEncoderMock.encode("aPassword")).willReturn("anEncodedPassword");
+        given(passwordServiceMock.encode("aPassword")).willReturn("anEncodedPassword");
 
         String userId = userService.addNewUser(A_USER_NAME, "aPassword", "aName", "aTelephone", new ArrayList<>());
 
@@ -89,7 +88,7 @@ class UserServiceTest {
         UserDto oldUserDto = new UserDto(A_USER_ID, "aUsername", "anOldPass", new ArrayList<>(), "aName", "anOldTelephone");
         UserDto expected = new UserDto(A_USER_ID, "aUsername", "aNewHashedPass", new ArrayList<>(), "aName", "aTelephone");
         given(userRepositoryMock.getUserById(A_USER_ID)).willReturn(oldUserDto);
-        given(passwordEncoderMock.encode("aNewPassword")).willReturn("aNewHashedPass");
+        given(passwordServiceMock.encode("aNewPassword")).willReturn("aNewHashedPass");
 
         userService.updateUser(newUserDto);
 
@@ -115,17 +114,45 @@ class UserServiceTest {
     @Test
     void canGetAllUserByRoles() {
         given(userRepositoryMock.getAllUsersByRole(Roles.ADMIN)).willReturn(allUsers());
-        given(userRepositoryMock.getAllUsersByRole(Roles.FINANCE)).willReturn(allUsers());
+        given(userRepositoryMock.getAllUsersByRole(Roles.FINANCE)).willReturn(almostDifferentSetOfUsers());
 
-        List<UserDto> allUsersByRole = userService.getAllUsersByRole(Roles.ADMIN, Roles.FINANCE);
+        List<UserDto> allUsersByRole = userService.getAllUsersByRole(List.of(Roles.ADMIN, Roles.FINANCE));
 
-        assertThat(allUsersByRole).isEqualTo(combineListsWithoutThePassword());
+        assertThat(allUsersByRole).isEqualTo(combineListsWithoutDuplicatesAndPasswords());
     }
 
-    private List<UserDto> combineListsWithoutThePassword() {
-        List<UserDto> list = new ArrayList<>(allUserWithoutThePassword());
-        list.addAll(allUserWithoutThePassword());
-        return list;
+    @Test
+    void userIsDeactivatedByAssigningTheRoleDeactivatedToTheirUserId(){
+        UserDto userDetails = new UserDto(A_USER_ID, "aUsername", "anOldPass", List.of(Roles.ADMIN, Roles.STAFF), "aName", "anOldTelephone");
+        UserDto deactivatedUser = new UserDto(A_USER_ID, A_USER_ID, "random_pass", List.of(Roles.DEACTIVATED), null, null);
+        given(userRepositoryMock.getUserById(A_USER_ID)).willReturn(userDetails);
+        given(passwordServiceMock.random(8)).willReturn("random_pass");
+
+        userService.deactivateUser(A_USER_ID);
+
+        then(userRepositoryMock).should().updateUser(deactivatedUser);
+    }
+
+    @Test
+    void deactivateUserWithoutUserIdThrowsIllegalArgumentException() {
+        assertThatThrownBy(() -> userService.deactivateUser(null))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Cannot update user with no userId");
+
+        assertThatThrownBy(() -> userService.deactivateUser(""))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Cannot update user with no userId");
+    }
+
+
+    private List<UserDto> combineListsWithoutDuplicatesAndPasswords() {
+        return List.of(
+                new UserDto("1", null, null, null, null, null),
+                new UserDto("2", null, null, null, null, null),
+                new UserDto("3", null, null, null, null, null),
+                new UserDto("4", null, null, null, null, null),
+                new UserDto("5", null, null, null, null, null)
+        );
     }
 
     private List<UserDto> allUsers() {
@@ -134,6 +161,15 @@ class UserServiceTest {
                 new UserDto("2", null, "password", null, null, null),
                 new UserDto("3", null, "password", null, null, null),
                 new UserDto("4", null, "password", null, null, null)
+        );
+    }
+
+    private List<UserDto> almostDifferentSetOfUsers() {
+        return List.of(
+                new UserDto("1", null, "password", null, null, null),
+                new UserDto("2", null, "password", null, null, null),
+                new UserDto("3", null, "password", null, null, null),
+                new UserDto("5", null, "password", null, null, null)
         );
     }
 
@@ -146,5 +182,11 @@ class UserServiceTest {
         );
     }
 
+    private UserDto userStoredInRepositoryWithoutThePassword() {
+        UserDto userStoredInRepositoryWithoutThePassword = new UserDto();
+        userStoredInRepositoryWithoutThePassword.setUserId(A_USER_ID);
+        userStoredInRepositoryWithoutThePassword.setUsername(A_USER_NAME);
+        return userStoredInRepositoryWithoutThePassword;
+    }
 
 }

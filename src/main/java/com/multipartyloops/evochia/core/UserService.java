@@ -1,48 +1,49 @@
 package com.multipartyloops.evochia.core;
 
+import com.multipartyloops.evochia.core.commons.PasswordService;
 import com.multipartyloops.evochia.entities.users.Roles;
 import com.multipartyloops.evochia.entities.users.UserDto;
 import com.multipartyloops.evochia.persistance.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
+
+import static com.multipartyloops.evochia.entities.users.Roles.DEACTIVATED;
 
 @Service
 public class UserService {
 
     private final UserRepository<UserDto> userRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final PasswordService passwordService;
 
     @Autowired
-    public UserService(UserRepository<UserDto> userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository<UserDto> userRepository, PasswordService passwordService) {
         this.userRepository = userRepository;
-        this.passwordEncoder = passwordEncoder;
+        this.passwordService = passwordService;
     }
 
     public UserDto getUserById(String userId) {
-        return userRepository.getUserById(userId);
+        return excludeThePassword(userRepository.getUserById(userId));
     }
 
     public UserDto getUserByUsername(String username) {
-        return userRepository.getUserByUsername(username);
+        return excludeThePassword(userRepository.getUserByUsername(username));
     }
 
     public String addNewUser(String username, String password, String name, String telephone, List<Roles> roles) {
 
         String userId = UUID.randomUUID().toString();
-        UserDto userDto = new UserDto(userId, username, passwordEncoder.encode(password), roles, name, telephone);
+        UserDto userDto = new UserDto(userId, username, passwordService.encode(password), roles, name, telephone);
         userRepository.storeUser(userDto);
         return userId;
     }
 
     public void updateUser(UserDto newUser) {
 
-        checkUserIdIsPassed(newUser);
+        checkUserIdIsPassed(newUser.getUserId());
 
         UserDto user = userRepository.getUserById(newUser.getUserId());
         UserDto updatedUser = constructUpdatedUser(newUser, user);
@@ -58,12 +59,27 @@ public class UserService {
     }
 
 
-    public List<UserDto> getAllUsersByRole(Roles... roles){
+    public List<UserDto> getAllUsersByRole(List<Roles> roles){
 
-        return Arrays.stream(roles)
+        return roles
+                .stream()
                 .map(userRepository::getAllUsersByRole)
                 .flatMap(list-> list.stream().map(this::excludeThePassword))
+                .distinct()
                 .collect(Collectors.toList());
+    }
+
+    public void deactivateUser(String userId){
+        checkUserIdIsPassed(userId);
+
+        UserDto user = userRepository.getUserById(userId);
+        user.setUsername(userId);
+        user.setPassword(passwordService.random(8));
+        user.setName(null);
+        user.setRoles(List.of(DEACTIVATED));
+        user.setTelephone(null);
+
+        userRepository.updateUser(user);
     }
 
     private UserDto excludeThePassword(UserDto user) {
@@ -76,8 +92,7 @@ public class UserService {
         );
     }
 
-    private void checkUserIdIsPassed(UserDto newUser) {
-        String userIdToUpdate = newUser.getUserId();
+    private void checkUserIdIsPassed(String userIdToUpdate) {
         if(userIdToUpdate == null || "".equals(userIdToUpdate)) {
             throw new IllegalArgumentException("Cannot update user with no userId");
         }
@@ -105,7 +120,7 @@ public class UserService {
         if(newPassword == null || "".equals(newPassword)){
             return oldPassword;
         }
-        return passwordEncoder.encode(newPassword);
+        return passwordService.encode(newPassword);
     }
 
     private  List<Roles> oldRolesOrUpdateRoles(List<Roles> oldRoles, List<Roles> newRoles) {

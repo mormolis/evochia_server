@@ -16,15 +16,25 @@ import java.sql.SQLIntegrityConstraintViolationException;
 public class EvochiaExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {SQLIntegrityConstraintViolationException.class})
-    protected ResponseEntity<Object> dataIntegrityViolation(RuntimeException ex, WebRequest request) {
+    protected ResponseEntity<Object> dataIntegrityViolation(SQLIntegrityConstraintViolationException ex, WebRequest request) {
         Object bodyOfResponse = new ErrorResponseBody("Data integrity violation occurred.");
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.CONFLICT, request);
     }
 
-
-    @ExceptionHandler(value = {RowNotFoundException.class})
+    //TODO: think about the NumberFormatException
+    @ExceptionHandler(value = {RowNotFoundException.class, NumberFormatException.class})
     protected ResponseEntity<Object> valueNotFound(RuntimeException ex, WebRequest request) {
-        Object bodyOfResponse = new ErrorResponseBody(ex.getMessage());
+        String message = ex.getMessage();
+        if (ex instanceof NumberFormatException) {
+            message = "User not found.";
+        }
+        Object bodyOfResponse = new ErrorResponseBody(message);
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler(value = {IllegalArgumentException.class})
+    protected ResponseEntity<Object> badRequest(IllegalArgumentException ex, WebRequest request) {
+        Object bodyOfResponse = new ErrorResponseBody(ex.getMessage());
+        return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
 }
