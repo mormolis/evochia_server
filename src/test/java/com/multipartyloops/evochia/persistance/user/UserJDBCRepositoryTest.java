@@ -1,9 +1,13 @@
 package com.multipartyloops.evochia.persistance.user;
 
-import com.multipartyloops.evochia.entities.users.Roles;
-import com.multipartyloops.evochia.entities.users.UserDto;
+import com.multipartyloops.evochia.entities.user.Roles;
+import com.multipartyloops.evochia.entities.user.UserDto;
+import com.multipartyloops.evochia.persistance.JDBCTest;
+import com.multipartyloops.evochia.persistance.UuidPersistenceTransformer;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.dao.DuplicateKeyException;
+import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,6 +18,13 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 class UserJDBCRepositoryTest extends JDBCTest {
+
+    private UserJDBCRepository userJDBCRepository;
+
+    @BeforeEach
+    void setup() {
+        userJDBCRepository = new UserJDBCRepository(new JdbcTemplate(dataSource), new UuidPersistenceTransformer());
+    }
 
     @Test
     void returnsUserById() {

@@ -1,8 +1,8 @@
 package com.multipartyloops.evochia.core;
 
 import com.multipartyloops.evochia.core.commons.PasswordService;
-import com.multipartyloops.evochia.entities.users.Roles;
-import com.multipartyloops.evochia.entities.users.UserDto;
+import com.multipartyloops.evochia.entities.user.Roles;
+import com.multipartyloops.evochia.entities.user.UserDto;
 import com.multipartyloops.evochia.entrypoints.exceptions.CannotUpdateDeactivatedUserException;
 import com.multipartyloops.evochia.persistance.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -71,7 +71,7 @@ class UserServiceTest {
     void addsANewUser() {
         ArgumentCaptor<UserDto> argumentCaptor = ArgumentCaptor.forClass(UserDto.class);
         willDoNothing().given(userRepositoryMock).storeUser(argumentCaptor.capture());
-        given(passwordServiceMock.encode("aPassword")).willReturn("anEncodedPassword");
+        given(passwordServiceMock.hashPassword("aPassword")).willReturn("anEncodedPassword");
 
         String userId = userService.addNewUser(A_USER_NAME, "aPassword", "aName", "aTelephone", new ArrayList<>());
 
@@ -89,7 +89,7 @@ class UserServiceTest {
         UserDto oldUserDto = new UserDto(A_USER_ID, "aUsername", "anOldPass", new ArrayList<>(), "aName", "anOldTelephone");
         UserDto expected = new UserDto(A_USER_ID, "aUsername", "aNewHashedPass", new ArrayList<>(), "aName", "aTelephone");
         given(userRepositoryMock.getUserById(A_USER_ID)).willReturn(oldUserDto);
-        given(passwordServiceMock.encode("aNewPassword")).willReturn("aNewHashedPass");
+        given(passwordServiceMock.hashPassword("aNewPassword")).willReturn("aNewHashedPass");
 
         userService.updateUser(newUserDto);
 
@@ -127,7 +127,7 @@ class UserServiceTest {
         UserDto userDetails = new UserDto(A_USER_ID, "aUsername", "anOldPass", List.of(Roles.ADMIN, Roles.STAFF), "aName", "anOldTelephone");
         UserDto deactivatedUser = new UserDto(A_USER_ID, A_USER_ID, "random_pass", List.of(Roles.DEACTIVATED), null, null);
         given(userRepositoryMock.getUserById(A_USER_ID)).willReturn(userDetails);
-        given(passwordServiceMock.random(8)).willReturn("random_pass");
+        given(passwordServiceMock.generateRandomPassword(8)).willReturn("random_pass");
 
         userService.deactivateUser(A_USER_ID);
 

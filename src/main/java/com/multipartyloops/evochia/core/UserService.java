@@ -1,8 +1,8 @@
 package com.multipartyloops.evochia.core;
 
 import com.multipartyloops.evochia.core.commons.PasswordService;
-import com.multipartyloops.evochia.entities.users.Roles;
-import com.multipartyloops.evochia.entities.users.UserDto;
+import com.multipartyloops.evochia.entities.user.Roles;
+import com.multipartyloops.evochia.entities.user.UserDto;
 import com.multipartyloops.evochia.entrypoints.exceptions.CannotUpdateDeactivatedUserException;
 import com.multipartyloops.evochia.persistance.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.multipartyloops.evochia.entities.users.Roles.DEACTIVATED;
+import static com.multipartyloops.evochia.entities.user.Roles.DEACTIVATED;
 
 @Service
 public class UserService {
@@ -37,7 +37,7 @@ public class UserService {
     public String addNewUser(String username, String password, String name, String telephone, List<Roles> roles) {
 
         String userId = UUID.randomUUID().toString();
-        UserDto userDto = new UserDto(userId, username, passwordService.encode(password), roles, name, telephone);
+        UserDto userDto = new UserDto(userId, username, passwordService.hashPassword(password), roles, name, telephone);
         userRepository.storeUser(userDto);
         return userId;
     }
@@ -80,7 +80,7 @@ public class UserService {
 
         UserDto user = userRepository.getUserById(userId);
         user.setUsername(userId);
-        user.setPassword(passwordService.random(8));
+        user.setPassword(passwordService.generateRandomPassword(8));
         user.setName(null);
         user.setRoles(List.of(DEACTIVATED));
         user.setTelephone(null);
@@ -126,7 +126,7 @@ public class UserService {
         if(newPassword == null || "".equals(newPassword)){
             return oldPassword;
         }
-        return passwordService.encode(newPassword);
+        return passwordService.hashPassword(newPassword);
     }
 
     private  List<Roles> oldRolesOrUpdateRoles(List<Roles> oldRoles, List<Roles> newRoles) {

@@ -1,7 +1,7 @@
 package com.multipartyloops.evochia.entrypoints.users;
 
 import com.multipartyloops.evochia.core.UserService;
-import com.multipartyloops.evochia.entities.users.UserDto;
+import com.multipartyloops.evochia.entities.user.UserDto;
 import com.multipartyloops.evochia.entrypoints.users.dtos.CreateUserResponseDto;
 import com.multipartyloops.evochia.entrypoints.users.dtos.RequestUserByRolesDto;
 import org.springframework.http.HttpStatus;

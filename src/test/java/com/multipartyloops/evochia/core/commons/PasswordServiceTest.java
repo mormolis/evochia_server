@@ -34,7 +34,7 @@ class PasswordServiceTest {
     void generatesARandomPasswordOfADefinedSize() {
         given(randomMock.ints(5, 33, 122)).willReturn(IntStream.of(35, 55, 58, 70, 116));
 
-        String randomPassword = passwordService.random(5);
+        String randomPassword = passwordService.generateRandomPassword(5);
 
         assertThat(randomPassword).isEqualTo("#7:Ft");
     }
@@ -43,7 +43,7 @@ class PasswordServiceTest {
     void encodesPasswordUsingPasswordEncoder() {
         given(passwordEncoderMock.encode("aPassword")).willReturn("anEncodedPassword");
 
-        String encodedPassword = passwordService.encode("aPassword");
+        String encodedPassword = passwordService.hashPassword("aPassword");
 
         assertThat(encodedPassword).isEqualTo("anEncodedPassword");
     }

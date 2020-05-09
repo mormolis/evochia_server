@@ -19,11 +19,15 @@ public class PasswordService {
         this.random = random;
     }
 
-    public String encode(String password) {
+    public String hashPassword(String password) {
         return passwordEncoder.encode(password);
     }
 
-    public String random(int size) {
+    public boolean passwordsAreTheSame(String unHashed, String hashed) {
+        return passwordEncoder.matches(unHashed, hashed);
+    }
+
+    public String generateRandomPassword(int size) {
         return random
                 .ints(size, UNICODE_ACCEPTED_CHARACTERS_BEGINNING_VALUE, UNICODE_ACCEPTED_CHARACTERS_END_VALUE)
                 .mapToObj(i -> Character.toString((char) i))

@@ -1,11 +1,12 @@
 package com.multipartyloops.evochia.persistance.user;
 
-import com.multipartyloops.evochia.entities.users.Roles;
-import com.multipartyloops.evochia.entities.users.UserDto;
+import com.multipartyloops.evochia.entities.user.Roles;
+import com.multipartyloops.evochia.entities.user.UserDto;
 import com.multipartyloops.evochia.persistance.UuidPersistenceTransformer;
 import com.multipartyloops.evochia.persistance.exceptions.RowNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -15,7 +16,7 @@ import java.util.UUID;
 
 import static com.multipartyloops.evochia.persistance.user.UserSQLStatements.*;
 
-@Component
+@Repository
 public class UserJDBCRepository implements UserRepository<UserDto> {
 
     private final JdbcTemplate jdbcTemplate;

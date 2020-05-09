@@ -1,4 +1,4 @@
-package com.multipartyloops.evochia.entities.users;
+package com.multipartyloops.evochia.entities.user;
 
 public enum Roles {
     ADMIN,

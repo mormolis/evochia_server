@@ -1,4 +1,4 @@
-package com.multipartyloops.evochia.persistance.user;
+package com.multipartyloops.evochia.persistance;
 
 import com.multipartyloops.evochia.configuration.AppConfigurationProperties;
 import com.multipartyloops.evochia.persistance.UuidPersistenceTransformer;
@@ -26,7 +26,7 @@ public abstract class JDBCTest {
     @Autowired
     private AppConfigurationProperties appConfigurationProperties;
 
-    static DataSource dataSource = DataSourceBuilder.create()
+    static protected DataSource dataSource = DataSourceBuilder.create()
             .driverClassName("com.mysql.cj.jdbc.Driver")
             .url("jdbc:mysql://localhost:3306/evochia_test")
             .username("evochia_developer")
@@ -35,17 +35,9 @@ public abstract class JDBCTest {
 
 
     @BeforeAll
-    static void setupCleanDatabase() {
+    static protected void setupCleanDatabase() {
         Flyway flyway = Flyway.configure().dataSource(dataSource).load();
         flyway.clean();
         flyway.migrate();
-    }
-
-
-    UserJDBCRepository userJDBCRepository;
-
-    @BeforeEach
-    void setup() {
-        userJDBCRepository = new UserJDBCRepository(new JdbcTemplate(dataSource), new UuidPersistenceTransformer());
     }
 }
