@@ -2,7 +2,7 @@ package com.multipartyloops.evochia.core.identity;
 
 import com.multipartyloops.evochia.core.commons.PasswordService;
 import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsFormatException;
-import com.multipartyloops.evochia.entities.identity.ClientCredentialsDto;
+import com.multipartyloops.evochia.core.identity.entities.ClientCredentialsDto;
 import com.multipartyloops.evochia.persistance.exceptions.RowNotFoundException;
 import com.multipartyloops.evochia.persistance.identity.clientcredentials.ClientCredentialsRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -51,7 +51,7 @@ class ClientCredentialsServiceTest {
         given(cacheMock.getByClientId(A_VALID_CLIENT_ID)).willReturn(cachedResponse);
         given(passwordServiceMock.passwordsAreTheSame(A_VALID_UNHASHED_SECRET, "aHashedSecret")).willReturn(true);
 
-        boolean validityCheck = clientCredentialsService.clientCredentialsAreValid(A_VALID_CLIENT_ID, A_VALID_UNHASHED_SECRET);
+        boolean validityCheck = clientCredentialsService.isPairValid(A_VALID_CLIENT_ID, A_VALID_UNHASHED_SECRET);
 
         then(clientCredentialsRepositoryMock).shouldHaveNoInteractions();
         assertThat(validityCheck).isTrue();
@@ -63,7 +63,7 @@ class ClientCredentialsServiceTest {
         given(cacheMock.getByClientId(A_VALID_CLIENT_ID)).willReturn(cachedResponse);
         given(passwordServiceMock.passwordsAreTheSame(AN_INVALID_UNHASHED_SECRET, cachedResponse.getSecret())).willReturn(false);
 
-        boolean validityCheck = clientCredentialsService.clientCredentialsAreValid(A_VALID_CLIENT_ID, AN_INVALID_UNHASHED_SECRET);
+        boolean validityCheck = clientCredentialsService.isPairValid(A_VALID_CLIENT_ID, AN_INVALID_UNHASHED_SECRET);
 
         then(clientCredentialsRepositoryMock).shouldHaveNoInteractions();
         assertThat(validityCheck).isFalse();
@@ -76,7 +76,7 @@ class ClientCredentialsServiceTest {
         given(clientCredentialsRepositoryMock.getByClientId(A_VALID_CLIENT_ID)).willReturn(dbResponse);
         given(passwordServiceMock.passwordsAreTheSame(A_VALID_UNHASHED_SECRET, dbResponse.getSecret())).willReturn(true);
 
-        boolean validityCheck = clientCredentialsService.clientCredentialsAreValid(A_VALID_CLIENT_ID, A_VALID_UNHASHED_SECRET);
+        boolean validityCheck = clientCredentialsService.isPairValid(A_VALID_CLIENT_ID, A_VALID_UNHASHED_SECRET);
 
         then(clientCredentialsRepositoryMock).should().getByClientId(A_VALID_CLIENT_ID);
         assertThat(validityCheck).isTrue();
@@ -87,7 +87,7 @@ class ClientCredentialsServiceTest {
         given(cacheMock.getByClientId(AN_INVALID_CLIENT_ID)).willReturn(null);
         given(clientCredentialsRepositoryMock.getByClientId(AN_INVALID_CLIENT_ID)).willThrow(new RowNotFoundException("Invalid Client"));
 
-        boolean validityCheck = clientCredentialsService.clientCredentialsAreValid(AN_INVALID_CLIENT_ID, any(String.class));
+        boolean validityCheck = clientCredentialsService.isPairValid(AN_INVALID_CLIENT_ID, any(String.class));
 
         then(passwordServiceMock).shouldHaveNoInteractions();
         assertThat(validityCheck).isFalse();
@@ -100,7 +100,7 @@ class ClientCredentialsServiceTest {
         given(clientCredentialsRepositoryMock.getByClientId(A_VALID_CLIENT_ID)).willReturn(dbResponse);
         given(passwordServiceMock.passwordsAreTheSame(AN_INVALID_UNHASHED_SECRET, dbResponse.getSecret())).willReturn(false);
 
-        boolean validityCheck = clientCredentialsService.clientCredentialsAreValid(A_VALID_CLIENT_ID, AN_INVALID_UNHASHED_SECRET);
+        boolean validityCheck = clientCredentialsService.isPairValid(A_VALID_CLIENT_ID, AN_INVALID_UNHASHED_SECRET);
 
         then(clientCredentialsRepositoryMock).should().getByClientId(A_VALID_CLIENT_ID);
         assertThat(validityCheck).isFalse();

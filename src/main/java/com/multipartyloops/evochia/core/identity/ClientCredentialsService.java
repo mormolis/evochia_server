@@ -2,7 +2,7 @@ package com.multipartyloops.evochia.core.identity;
 
 import com.multipartyloops.evochia.core.commons.PasswordService;
 import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsFormatException;
-import com.multipartyloops.evochia.entities.identity.ClientCredentialsDto;
+import com.multipartyloops.evochia.core.identity.entities.ClientCredentialsDto;
 import com.multipartyloops.evochia.persistance.exceptions.RowNotFoundException;
 import com.multipartyloops.evochia.persistance.identity.clientcredentials.ClientCredentialsRepository;
 import org.springframework.stereotype.Service;
@@ -23,7 +23,7 @@ public class ClientCredentialsService {
         this.cache = cache;
     }
 
-    public boolean clientCredentialsAreValid(String clientId, String secret) {
+    public boolean isPairValid(String clientId, String secret) {
 
         ClientCredentialsDto cached = cache.getByClientId(clientId);
         if (cached != null) {
@@ -42,6 +42,11 @@ public class ClientCredentialsService {
         clientCredentialsRepository.storeClientCredentials(clientCredentialsDto);
     }
 
+    public void deleteCredentialsByClientId(String clientId){
+        checkClientIdFormatValidity(clientId);
+        clientCredentialsRepository.deleteByClientId(clientId);
+    }
+
     private void checkIfDataIsValid(ClientCredentialsDto clientCredentialsDto) {
 
         if(clientCredentialsDto.getClientId() == null){
@@ -57,12 +62,6 @@ public class ClientCredentialsService {
         if(clientCredentialsDto.getSecret().length() < 8){
             throw new InvalidCredentialsFormatException("Secret must be at least 8 characters long");
         }
-
-    }
-
-    public void deleteCredentialsByClientId(String clientId){
-        checkClientIdFormatValidity(clientId);
-        clientCredentialsRepository.deleteByClientId(clientId);
     }
 
 

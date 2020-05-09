@@ -1,11 +1,10 @@
 package com.multipartyloops.evochia.persistance.user;
 
-import com.multipartyloops.evochia.entities.user.Roles;
-import com.multipartyloops.evochia.entities.user.UserDto;
+import com.multipartyloops.evochia.core.user.entities.Roles;
+import com.multipartyloops.evochia.core.user.entities.UserDto;
 import com.multipartyloops.evochia.persistance.UuidPersistenceTransformer;
 import com.multipartyloops.evochia.persistance.exceptions.RowNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;

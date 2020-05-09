@@ -1,6 +1,6 @@
 package com.multipartyloops.evochia.persistance.identity;
 
-import com.multipartyloops.evochia.entities.identity.AccessTokenDto;
+import com.multipartyloops.evochia.core.identity.entities.AccessTokenDto;
 import com.multipartyloops.evochia.persistance.JDBCTest;
 import com.multipartyloops.evochia.persistance.UuidPersistenceTransformer;
 import com.multipartyloops.evochia.persistance.exceptions.RowNotFoundException;

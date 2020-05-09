@@ -32,7 +32,7 @@ class PasswordServiceTest {
 
     @Test
     void generatesARandomPasswordOfADefinedSize() {
-        given(randomMock.ints(5, 33, 122)).willReturn(IntStream.of(35, 55, 58, 70, 116));
+        given(randomMock.ints(5, 40, 122)).willReturn(IntStream.of(35, 55, 58, 70, 116));
 
         String randomPassword = passwordService.generateRandomPassword(5);
 

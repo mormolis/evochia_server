@@ -40,7 +40,7 @@ public class EvochiaExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value = {IllegalArgumentException.class, InvalidCredentialsFormatException.class})
-    protected ResponseEntity<Object> badRequest(IllegalArgumentException ex, WebRequest request) {
+    protected ResponseEntity<Object> badRequest(RuntimeException ex, WebRequest request) {
         Object bodyOfResponse = new ErrorResponseBody(ex.getMessage());
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }

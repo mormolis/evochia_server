@@ -1,6 +1,6 @@
 package com.multipartyloops.evochia.core.identity;
 
-import com.multipartyloops.evochia.entities.user.Roles;
+import com.multipartyloops.evochia.core.user.entities.Roles;
 
 import java.util.Arrays;
 import java.util.List;

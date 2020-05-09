@@ -1,4 +1,4 @@
-package com.multipartyloops.evochia.entities.identity;
+package com.multipartyloops.evochia.entrypoints.identity.entities;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,13 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ClientCredentialsDto {
-
-    @JsonProperty
-    private String clientId;
-
-    @JsonProperty
-    private String secret;
+public class ClientCreationRequestBody {
 
     @JsonProperty
     private String device;
