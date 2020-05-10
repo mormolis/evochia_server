@@ -58,11 +58,6 @@ class AccessTokenJDBCRepositoryTest extends JDBCTest {
         assertThat(allTokens).containsAll(tokensToInsert);
     }
 
-    private void storeListOfAccessTokens(List<AccessTokenDto> tokensToInsert) {
-        tokensToInsert
-                .forEach(token->accessTokenJDBCRepository.storeAccessToken(token));
-    }
-
     @Test
     void canRetrieveByRefreshToken(){
         List<AccessTokenDto> tokensToInsert = generateThreeTokens();
@@ -79,6 +74,24 @@ class AccessTokenJDBCRepositoryTest extends JDBCTest {
         assertThatThrownBy(()->accessTokenJDBCRepository.getByRefreshToken(refreshTokenThatDoesNotExistInTheDb))
                 .isInstanceOf(RowNotFoundException.class)
                 .hasMessage("Refresh Token could not be found");
+    }
+
+    @Test
+    void accessTokenCanBeDeleted(){
+        List<AccessTokenDto> tokensToInsert = generateThreeTokens();
+        storeListOfAccessTokens(tokensToInsert);
+        String tokenToDelete = tokensToInsert.get(0).getToken();
+
+        accessTokenJDBCRepository.deleteAccessToken(tokenToDelete);
+
+        assertThatThrownBy(()->accessTokenJDBCRepository.getByAccessToken(tokenToDelete))
+                .isInstanceOf(RowNotFoundException.class)
+                .hasMessage("Access Token not found");
+    }
+
+    private void storeListOfAccessTokens(List<AccessTokenDto> tokensToInsert) {
+        tokensToInsert
+                .forEach(token->accessTokenJDBCRepository.storeAccessToken(token));
     }
 
     private List<AccessTokenDto> generateThreeTokens() {

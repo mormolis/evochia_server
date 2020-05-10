@@ -17,3 +17,20 @@ GRANT ALL ON evochia_test.* TO 'evochia_developer'@'localhost';
 ```
 ./gradlew bootRun --spring.profiles.active=dev
 ```
+
+-----------------
+## how to query the db and check for uuid values in human readable format:
+
+example:
+```sql
+SELECT
+  LOWER(CONCAT(
+    SUBSTR(HEX(client_id), 1, 8), '-',
+    SUBSTR(HEX(client_id), 9, 4), '-',
+    SUBSTR(HEX(client_id), 13, 4), '-',
+    SUBSTR(HEX(client_id), 17, 4), '-',
+    SUBSTR(HEX(client_id), 21)
+  ))
+FROM client_credentials;
+
+```

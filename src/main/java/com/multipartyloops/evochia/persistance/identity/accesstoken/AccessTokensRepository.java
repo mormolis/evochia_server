@@ -9,4 +9,5 @@ public interface AccessTokensRepository<T>{
     List<T> getAllTokens();
 
     void storeAccessToken(T accessToken);
+    void deleteAccessToken(String token);
 }

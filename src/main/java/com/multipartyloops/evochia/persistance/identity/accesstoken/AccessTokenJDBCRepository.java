@@ -65,6 +65,12 @@ public class AccessTokenJDBCRepository implements AccessTokensRepository<AccessT
         );
     }
 
+    @Override
+    public void deleteAccessToken(String token) {
+        Object binaryToken = uuidPersistenceTransformer.fromString(token);
+        jdbcTemplate.update(ACCESS_TOKEN_DELETION, binaryToken);
+    }
+
     private AccessTokenDto parseToken(ResultSet resultSet, int _rowNumber) throws SQLException {
 
         return new AccessTokenDto(
