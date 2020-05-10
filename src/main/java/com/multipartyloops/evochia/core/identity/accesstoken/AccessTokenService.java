@@ -8,12 +8,14 @@ import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsEx
 import com.multipartyloops.evochia.core.identity.user.UserAuthenticationService;
 import com.multipartyloops.evochia.core.identity.user.entities.UserAuthenticationDto;
 import com.multipartyloops.evochia.persistance.identity.accesstoken.AccessTokensRepository;
+import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.Optional;
 import java.util.UUID;
 
+@Service
 public class AccessTokenService {
 
     private static final long TOKEN_EXPIRY_IN_SECONDS = 3600;

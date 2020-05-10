@@ -4,6 +4,7 @@ import com.multipartyloops.evochia.core.commons.PasswordService;
 import com.multipartyloops.evochia.core.identity.user.entities.Roles;
 import com.multipartyloops.evochia.core.identity.user.entities.UserAuthenticationDto;
 import com.multipartyloops.evochia.core.identity.user.entities.UserDto;
+import com.multipartyloops.evochia.persistance.exceptions.RowNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -20,12 +21,16 @@ public class UserAuthenticationService {
     }
 
     public Optional<UserAuthenticationDto> authenticateUser(String username, String password) {
-        UserDto userByUsername = userService.getUserByUserName(username);
 
-        if (passwordIsValidAndUserNotDeactivated(userByUsername, password)) {
-            return Optional.of(new UserAuthenticationDto(userByUsername.getUserId(), userByUsername.getRoles()));
+        try {
+            UserDto userByUsername = userService.getUserByUserName(username);
+            if (passwordIsValidAndUserNotDeactivated(userByUsername, password)) {
+                return Optional.of(new UserAuthenticationDto(userByUsername.getUserId(), userByUsername.getRoles()));
+            }
+            return Optional.empty();
+        } catch (RowNotFoundException e) {
+            return Optional.empty();
         }
-        return Optional.empty();
     }
 
     private boolean passwordIsValidAndUserNotDeactivated(UserDto userByUsername, String password){

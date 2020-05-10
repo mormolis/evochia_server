@@ -4,6 +4,7 @@ import com.multipartyloops.evochia.core.identity.entities.AccessTokenDto;
 import com.multipartyloops.evochia.persistance.UuidPersistenceTransformer;
 import com.multipartyloops.evochia.persistance.exceptions.RowNotFoundException;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,6 +12,7 @@ import java.util.List;
 
 import static com.multipartyloops.evochia.persistance.identity.accesstoken.AccessTokenSQLStatements.*;
 
+@Repository
 public class AccessTokenJDBCRepository implements AccessTokensRepository<AccessTokenDto> {
 
     private final JdbcTemplate jdbcTemplate;

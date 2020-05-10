@@ -1,5 +1,6 @@
 package com.multipartyloops.evochia.entrypoints.exceptions;
 
+import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsException;
 import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsFormatException;
 import com.multipartyloops.evochia.entrypoints.exceptions.dtos.ErrorResponseBody;
 import com.multipartyloops.evochia.persistance.exceptions.RowNotFoundException;
@@ -37,6 +38,12 @@ public class EvochiaExceptionHandler extends ResponseEntityExceptionHandler {
         }
         Object bodyOfResponse = new ErrorResponseBody(message);
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
+    }
+
+    @ExceptionHandler(value = {InvalidCredentialsException.class})
+    protected ResponseEntity<Object> unauthorized(RuntimeException ex, WebRequest request) {
+        Object bodyOfResponse = new ErrorResponseBody(ex.getMessage());
+        return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
     }
 
     @ExceptionHandler(value = {IllegalArgumentException.class, InvalidCredentialsFormatException.class})

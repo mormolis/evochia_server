@@ -1,13 +1,14 @@
 package com.multipartyloops.evochia.core.identity;
 
 import com.multipartyloops.evochia.core.identity.user.entities.Roles;
+import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+@Service
 public class RolesConverter {
-
 
     public List<Roles> fromString(String givenRoles) {
         return Arrays.stream(givenRoles.split(" "))
