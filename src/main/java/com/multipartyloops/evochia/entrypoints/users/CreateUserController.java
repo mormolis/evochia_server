@@ -48,7 +48,7 @@ public class CreateUserController {
 
     @RequestMapping(value = "/user/username/{username}", method = RequestMethod.GET)
     public ResponseEntity<UserDto> getUserByUsername (@PathVariable(value = "username") String username) {
-        UserDto userById = userService.getUserByUsername(username);
+        UserDto userById = userService.getUserByUsernameWithPasswordObfuscation(username);
         return new ResponseEntity<>(userById, HttpStatus.OK);
     }
 

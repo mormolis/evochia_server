@@ -1,7 +1,6 @@
 package com.multipartyloops.evochia.core.identity.user;
 
 import com.multipartyloops.evochia.core.commons.PasswordService;
-import com.multipartyloops.evochia.core.identity.user.UserService;
 import com.multipartyloops.evochia.core.identity.user.entities.Roles;
 import com.multipartyloops.evochia.core.identity.user.entities.UserDto;
 import com.multipartyloops.evochia.entrypoints.exceptions.CannotUpdateDeactivatedUserException;
@@ -62,7 +61,7 @@ class UserServiceTest {
         given(userRepositoryMock.getUserByUsername(A_USER_NAME))
                 .willReturn(expectedUser);
 
-        UserDto userByUsername = userService.getUserByUsername(A_USER_NAME);
+        UserDto userByUsername = userService.getUserByUsernameWithPasswordObfuscation(A_USER_NAME);
 
         then(userRepositoryMock).should().getUserByUsername(A_USER_NAME);
         assertThat(userByUsername).isEqualTo(userStoredInRepositoryWithoutThePassword());

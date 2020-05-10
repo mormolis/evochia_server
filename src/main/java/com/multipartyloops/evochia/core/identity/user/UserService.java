@@ -30,8 +30,12 @@ public class UserService {
         return excludeThePassword(userRepository.getUserById(userId));
     }
 
-    public UserDto getUserByUsername(String username) {
-        return excludeThePassword(userRepository.getUserByUsername(username));
+    public UserDto getUserByUsernameWithPasswordObfuscation(String username) {
+        return excludeThePassword(getUserByUserName((username)));
+    }
+
+    public UserDto getUserByUserName(String username) {
+        return userRepository.getUserByUsername(username);
     }
 
     public String addNewUser(String username, String password, String name, String telephone, List<Roles> roles) {
