@@ -1,6 +1,6 @@
 package com.multipartyloops.evochia.persistance.user;
 
-import com.multipartyloops.evochia.core.user.entities.Roles;
+import com.multipartyloops.evochia.core.identity.user.entities.Roles;
 
 import java.util.List;
 

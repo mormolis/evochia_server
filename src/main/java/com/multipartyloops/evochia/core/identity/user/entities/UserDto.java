@@ -1,4 +1,4 @@
-package com.multipartyloops.evochia.core.user.entities;
+package com.multipartyloops.evochia.core.identity.user.entities;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

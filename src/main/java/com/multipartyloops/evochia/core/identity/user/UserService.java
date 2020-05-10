@@ -1,8 +1,8 @@
-package com.multipartyloops.evochia.core.user;
+package com.multipartyloops.evochia.core.identity.user;
 
 import com.multipartyloops.evochia.core.commons.PasswordService;
-import com.multipartyloops.evochia.core.user.entities.Roles;
-import com.multipartyloops.evochia.core.user.entities.UserDto;
+import com.multipartyloops.evochia.core.identity.user.entities.Roles;
+import com.multipartyloops.evochia.core.identity.user.entities.UserDto;
 import com.multipartyloops.evochia.entrypoints.exceptions.CannotUpdateDeactivatedUserException;
 import com.multipartyloops.evochia.persistance.user.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-import static com.multipartyloops.evochia.core.user.entities.Roles.DEACTIVATED;
+import static com.multipartyloops.evochia.core.identity.user.entities.Roles.DEACTIVATED;
 
 @Service
 public class UserService {
