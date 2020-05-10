@@ -1,4 +1,4 @@
-package com.multipartyloops.evochia.core.identity;
+package com.multipartyloops.evochia.core.identity.clients;
 
 import com.multipartyloops.evochia.core.commons.PasswordService;
 import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsFormatException;

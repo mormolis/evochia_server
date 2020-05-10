@@ -1,7 +1,7 @@
 package com.multipartyloops.evochia.entrypoints.identity;
 
 import com.multipartyloops.evochia.core.commons.PasswordService;
-import com.multipartyloops.evochia.core.identity.ClientCredentialsService;
+import com.multipartyloops.evochia.core.identity.clients.ClientCredentialsService;
 import com.multipartyloops.evochia.core.identity.entities.ClientCredentialsDto;
 import com.multipartyloops.evochia.entrypoints.identity.entities.ClientCreationRequestBody;
 import com.multipartyloops.evochia.entrypoints.identity.entities.ClientValidityCheckRequestBody;

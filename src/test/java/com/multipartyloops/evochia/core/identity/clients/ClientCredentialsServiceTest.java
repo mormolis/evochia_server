@@ -1,6 +1,8 @@
-package com.multipartyloops.evochia.core.identity;
+package com.multipartyloops.evochia.core.identity.clients;
 
 import com.multipartyloops.evochia.core.commons.PasswordService;
+import com.multipartyloops.evochia.core.identity.clients.ClientCredentialsCache;
+import com.multipartyloops.evochia.core.identity.clients.ClientCredentialsService;
 import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsFormatException;
 import com.multipartyloops.evochia.core.identity.entities.ClientCredentialsDto;
 import com.multipartyloops.evochia.persistance.exceptions.RowNotFoundException;

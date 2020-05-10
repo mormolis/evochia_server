@@ -1,4 +1,4 @@
-package com.multipartyloops.evochia.core.identity;
+package com.multipartyloops.evochia.core.identity.clients;
 
 import com.multipartyloops.evochia.core.identity.entities.ClientCredentialsDto;
 import com.multipartyloops.evochia.persistance.identity.clientcredentials.ClientCredentialsRepository;
