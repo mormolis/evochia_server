@@ -1,6 +1,6 @@
 package com.multipartyloops.evochia.core.identity.user;
 
-import com.multipartyloops.evochia.core.commons.PasswordService;
+import com.multipartyloops.evochia.core.identity.commons.PasswordService;
 import com.multipartyloops.evochia.core.identity.user.entities.Roles;
 import com.multipartyloops.evochia.core.identity.user.entities.UserAuthenticationDto;
 import com.multipartyloops.evochia.core.identity.user.entities.UserDto;
