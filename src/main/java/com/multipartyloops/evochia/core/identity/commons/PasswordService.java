@@ -1,4 +1,4 @@
-package com.multipartyloops.evochia.core.commons;
+package com.multipartyloops.evochia.core.identity.commons;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;

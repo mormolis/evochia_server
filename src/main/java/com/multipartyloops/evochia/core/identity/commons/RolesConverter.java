@@ -1,4 +1,4 @@
-package com.multipartyloops.evochia.core.identity;
+package com.multipartyloops.evochia.core.identity.commons;
 
 import com.multipartyloops.evochia.core.identity.user.entities.Roles;
 import org.springframework.stereotype.Service;

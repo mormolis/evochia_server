@@ -1,6 +1,8 @@
 package com.multipartyloops.evochia.entrypoints.users;
 
+import com.multipartyloops.evochia.configuration.evochiaauthtool.AuthRequirement;
 import com.multipartyloops.evochia.core.identity.user.UserService;
+import com.multipartyloops.evochia.core.identity.user.entities.Roles;
 import com.multipartyloops.evochia.core.identity.user.entities.UserDto;
 import com.multipartyloops.evochia.entrypoints.users.dtos.CreateUserResponseDto;
 import com.multipartyloops.evochia.entrypoints.users.dtos.RequestUserByRolesDto;
@@ -9,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/users")
@@ -21,7 +24,8 @@ public class CreateUserController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
-    public ResponseEntity<List<UserDto>> allUsers() {
+    @AuthRequirement(allow = {Roles.ADMIN})
+    public ResponseEntity<List<UserDto>> allUsers(@RequestHeader Map<String,String> headers) {
         List<UserDto> users = userService.getAllUsers();
         return new ResponseEntity<>(users, HttpStatus.OK);
     }

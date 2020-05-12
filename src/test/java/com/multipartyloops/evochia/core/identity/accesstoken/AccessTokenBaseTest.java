@@ -1,6 +1,6 @@
 package com.multipartyloops.evochia.core.identity.accesstoken;
 
-import com.multipartyloops.evochia.core.identity.RolesConverter;
+import com.multipartyloops.evochia.core.identity.commons.RolesConverter;
 import com.multipartyloops.evochia.core.identity.clients.ClientCredentialsService;
 import com.multipartyloops.evochia.core.identity.entities.AccessTokenDto;
 import com.multipartyloops.evochia.core.identity.user.UserAuthenticationService;

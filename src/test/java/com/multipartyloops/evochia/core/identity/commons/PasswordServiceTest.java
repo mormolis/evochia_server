@@ -1,4 +1,4 @@
-package com.multipartyloops.evochia.core.commons;
+package com.multipartyloops.evochia.core.identity.commons;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

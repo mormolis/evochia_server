@@ -1,5 +1,8 @@
 package com.multipartyloops.evochia.entrypoints.exceptions;
 
+import com.multipartyloops.evochia.configuration.exceptions.InvalidAccessTokenException;
+import com.multipartyloops.evochia.configuration.exceptions.TokenNotInTheRightFormatException;
+import com.multipartyloops.evochia.configuration.exceptions.UnauthorizedUserException;
 import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsException;
 import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsFormatException;
 import com.multipartyloops.evochia.entrypoints.exceptions.dtos.ErrorResponseBody;
@@ -40,13 +43,19 @@ public class EvochiaExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
     }
 
-    @ExceptionHandler(value = {InvalidCredentialsException.class})
+    @ExceptionHandler(value = {InvalidCredentialsException.class, InvalidAccessTokenException.class})
     protected ResponseEntity<Object> unauthorized(RuntimeException ex, WebRequest request) {
         Object bodyOfResponse = new ErrorResponseBody(ex.getMessage());
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
     }
 
-    @ExceptionHandler(value = {IllegalArgumentException.class, InvalidCredentialsFormatException.class})
+    @ExceptionHandler(value = {UnauthorizedUserException.class})
+    protected ResponseEntity<Object> forbiden(RuntimeException ex, WebRequest request) {
+        Object bodyOfResponse = new ErrorResponseBody(ex.getMessage());
+        return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.FORBIDDEN, request);
+    }
+
+    @ExceptionHandler(value = {IllegalArgumentException.class, InvalidCredentialsFormatException.class, TokenNotInTheRightFormatException.class})
     protected ResponseEntity<Object> badRequest(RuntimeException ex, WebRequest request) {
         Object bodyOfResponse = new ErrorResponseBody(ex.getMessage());
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);

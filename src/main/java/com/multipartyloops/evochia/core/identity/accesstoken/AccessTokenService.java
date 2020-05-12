@@ -1,6 +1,6 @@
 package com.multipartyloops.evochia.core.identity.accesstoken;
 
-import com.multipartyloops.evochia.core.identity.RolesConverter;
+import com.multipartyloops.evochia.core.identity.commons.RolesConverter;
 import com.multipartyloops.evochia.core.identity.clients.ClientCredentialsService;
 import com.multipartyloops.evochia.core.identity.entities.AccessTokenDto;
 import com.multipartyloops.evochia.core.identity.entities.ValidateTokenResponseDto;
@@ -63,7 +63,10 @@ public class AccessTokenService {
     public ValidateTokenResponseDto validateToken(String clientId, String secret, String accessToken) {
 
         checkClientCredentialsValidity(clientId, secret);
+        return validateTokenWithoutClientCredentials(accessToken);
+    }
 
+    public  ValidateTokenResponseDto validateTokenWithoutClientCredentials(String accessToken) {
         AccessTokenDto byAccessToken = accessTokenRepository.getByAccessToken(accessToken);
         ValidateTokenResponseDto validateTokenResponseDto = new ValidateTokenResponseDto(false, byAccessToken.getUserId(), byAccessToken.getClientId(), byAccessToken.getRoles());
         if (accessTokenHasNotExpired(byAccessToken)) {
