@@ -1,4 +1,4 @@
-package com.multipartyloops.evochia.persistance.user;
+package com.multipartyloops.evochia.persistance.identity.user;
 
 import com.multipartyloops.evochia.core.identity.user.entities.Roles;
 

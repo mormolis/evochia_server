@@ -1,4 +1,4 @@
-package com.multipartyloops.evochia.persistance.user;
+package com.multipartyloops.evochia.persistance.identity.user;
 
 import com.multipartyloops.evochia.core.identity.user.entities.Roles;
 import com.multipartyloops.evochia.core.identity.user.entities.UserDto;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import static com.multipartyloops.evochia.persistance.user.UserSQLStatements.*;
+import static com.multipartyloops.evochia.persistance.identity.user.UserSQLStatements.*;
 
 @Repository
 public class UserJDBCRepository implements UserRepository<UserDto> {

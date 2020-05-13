@@ -1,4 +1,4 @@
-package com.multipartyloops.evochia.persistance.user;
+package com.multipartyloops.evochia.persistance.identity.user;
 
 //naming convention {TABLE_NAME}_{OPERATION}
 final class UserSQLStatements {
