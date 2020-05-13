@@ -1,8 +1,17 @@
+CREATE TABLE table_grouping (
+    group_id BINARY(16) NOT NULL,
+    group_name VARCHAR(50) UNIQUE,
+    PRIMARY KEY (group_id),
+    INDEX (group_name)
+);
+
 CREATE TABLE table_info (
     table_id BINARY(16) NOT NULL,
     number INT UNIQUE,
     table_alias VARCHAR(50) UNIQUE,
+    group_id BINARY(16) NOT NULL,
     PRIMARY KEY (table_id),
+    FOREIGN KEY (group_id) REFERENCES table_grouping (group_id),
     INDEX (number)
 );
 
