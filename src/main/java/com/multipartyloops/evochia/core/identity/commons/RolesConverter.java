@@ -19,11 +19,7 @@ public class RolesConverter {
     public String fromList(List<Roles> rolesList) {
         return rolesList
                 .stream()
-                .collect(
-                        StringBuilder::new,
-                        (sb, role) -> sb.append(role).append(" "),
-                        StringBuilder::append
-                ).toString()
-                .trim();
+                .map(Enum::toString)
+                .collect(Collectors.joining(" "));
     }
 }
