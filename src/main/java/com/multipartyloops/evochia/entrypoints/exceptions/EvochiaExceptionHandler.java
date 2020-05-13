@@ -1,5 +1,6 @@
 package com.multipartyloops.evochia.entrypoints.exceptions;
 
+import com.multipartyloops.evochia.configuration.exceptions.AccessTokenNotProvidedException;
 import com.multipartyloops.evochia.configuration.exceptions.InvalidAccessTokenException;
 import com.multipartyloops.evochia.configuration.exceptions.TokenNotInTheRightFormatException;
 import com.multipartyloops.evochia.configuration.exceptions.UnauthorizedUserException;
@@ -50,12 +51,14 @@ public class EvochiaExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(value = {UnauthorizedUserException.class})
-    protected ResponseEntity<Object> forbiden(RuntimeException ex, WebRequest request) {
+    protected ResponseEntity<Object> forbidden(RuntimeException ex, WebRequest request) {
         Object bodyOfResponse = new ErrorResponseBody(ex.getMessage());
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.FORBIDDEN, request);
     }
 
-    @ExceptionHandler(value = {IllegalArgumentException.class, InvalidCredentialsFormatException.class, TokenNotInTheRightFormatException.class})
+    @ExceptionHandler(value = {IllegalArgumentException.class, InvalidCredentialsFormatException.class,
+            TokenNotInTheRightFormatException.class,
+            AccessTokenNotProvidedException.class})
     protected ResponseEntity<Object> badRequest(RuntimeException ex, WebRequest request) {
         Object bodyOfResponse = new ErrorResponseBody(ex.getMessage());
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);

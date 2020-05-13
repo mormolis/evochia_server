@@ -31,13 +31,15 @@ public class CreateUserController {
     }
 
     @RequestMapping(value = "/by-roles", method = RequestMethod.GET)
-    public ResponseEntity<List<UserDto>> usersByRoles(@RequestBody RequestUserByRolesDto body) {
+    @AuthRequirement(allow = {Roles.ADMIN})
+    public ResponseEntity<List<UserDto>> usersByRoles(@RequestHeader Map<String,String> headers, @RequestBody RequestUserByRolesDto body) {
         List<UserDto> users = userService.getAllUsersByRole(body.getRoles());
         return new ResponseEntity<>(users, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/user/add", method = RequestMethod.POST)
-    public ResponseEntity<CreateUserResponseDto> addUser(@RequestBody UserDto body) {
+    @AuthRequirement(allow = {Roles.ADMIN})
+    public ResponseEntity<CreateUserResponseDto> addUser(@RequestHeader Map<String,String> headers, @RequestBody UserDto body) {
         String userId = userService.addNewUser(body.getUsername(), body.getPassword(), body.getName(), body.getTelephone(), body.getRoles());
         CreateUserResponseDto createUserResponseDto = new CreateUserResponseDto();
         createUserResponseDto.setUserId(userId);
@@ -45,25 +47,29 @@ public class CreateUserController {
     }
 
     @RequestMapping(value = "/user/id/{user_id}", method = RequestMethod.GET)
-    public ResponseEntity<UserDto> getUserById (@PathVariable(value = "user_id") String userId) {
+    @AuthRequirement(allow = {Roles.ADMIN})
+    public ResponseEntity<UserDto> getUserById (@RequestHeader Map<String,String> headers, @PathVariable(value = "user_id") String userId) {
         UserDto userById = userService.getUserById(userId);
         return new ResponseEntity<>(userById, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/user/username/{username}", method = RequestMethod.GET)
-    public ResponseEntity<UserDto> getUserByUsername (@PathVariable(value = "username") String username) {
+    @AuthRequirement(allow = {Roles.ADMIN})
+    public ResponseEntity<UserDto> getUserByUsername (@RequestHeader Map<String,String> headers, @PathVariable(value = "username") String username) {
         UserDto userById = userService.getUserByUsernameWithPasswordObfuscation(username);
         return new ResponseEntity<>(userById, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/user/update", method = RequestMethod.PATCH)
-    public ResponseEntity<Void> updateUser (@RequestBody UserDto body) {
+    @AuthRequirement(allow = {Roles.ADMIN})
+    public ResponseEntity<Void> updateUser (@RequestHeader Map<String,String> headers, @RequestBody UserDto body) {
         userService.updateUser(body);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping(value = "/user/deactivate/{user_id}", method = RequestMethod.PUT)
-    public ResponseEntity<Void> deactivateUser(@PathVariable(value = "user_id") String userId) {
+    @AuthRequirement(allow = {Roles.ADMIN})
+    public ResponseEntity<Void> deactivateUser(@RequestHeader Map<String,String> headers, @PathVariable(value = "user_id") String userId) {
         userService.deactivateUser(userId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

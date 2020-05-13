@@ -1,8 +1,10 @@
 package com.multipartyloops.evochia.entrypoints.identity;
 
+import com.multipartyloops.evochia.configuration.evochiaauthtool.AuthRequirement;
 import com.multipartyloops.evochia.core.identity.commons.PasswordService;
 import com.multipartyloops.evochia.core.identity.clients.ClientCredentialsService;
 import com.multipartyloops.evochia.core.identity.entities.ClientCredentialsDto;
+import com.multipartyloops.evochia.core.identity.user.entities.Roles;
 import com.multipartyloops.evochia.entrypoints.identity.entities.ClientCreationRequestBody;
 import com.multipartyloops.evochia.entrypoints.identity.entities.ClientValidityCheckRequestBody;
 import com.multipartyloops.evochia.entrypoints.identity.entities.ClientValidityCheckResponseBody;
@@ -10,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
 import java.util.UUID;
 
 @RestController
@@ -25,7 +28,8 @@ public class ClientCredentialsController {
     }
 
     @RequestMapping(value = "/client/add", method = RequestMethod.POST)
-    public ResponseEntity<ClientCredentialsDto> addUser(@RequestBody ClientCreationRequestBody body) {
+    @AuthRequirement(allow = {Roles.ADMIN})
+    public ResponseEntity<ClientCredentialsDto> addUser(@RequestHeader Map<String,String> headers, @RequestBody ClientCreationRequestBody body) {
         String secret = passwordService.generateRandomPassword(16);
         ClientCredentialsDto clientCredentialsDto = new ClientCredentialsDto(UUID.randomUUID().toString(), secret, body.getDevice());
         clientCredentialsService.addNewClientCredentials(clientCredentialsDto);
@@ -34,13 +38,15 @@ public class ClientCredentialsController {
     }
 
     @RequestMapping(value = "/client/delete/{client_id}", method = RequestMethod.DELETE)
-    public ResponseEntity<Void> deleteUser(@PathVariable(value = "client_id") String clientId) {
+    @AuthRequirement(allow = {Roles.ADMIN})
+    public ResponseEntity<Void> deleteUser(@RequestHeader Map<String,String> headers, @PathVariable(value = "client_id") String clientId) {
         clientCredentialsService.deleteCredentialsByClientId(clientId);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
     @RequestMapping( value = "/client/validity", method = RequestMethod.POST)
-    public ResponseEntity<ClientValidityCheckResponseBody> checkValidity(@RequestBody ClientValidityCheckRequestBody body) {
+    @AuthRequirement(allow = {Roles.ADMIN})
+    public ResponseEntity<ClientValidityCheckResponseBody> checkValidity(@RequestHeader Map<String,String> headers, @RequestBody ClientValidityCheckRequestBody body) {
         boolean isValid = clientCredentialsService.isPairValid(body.getClientId(), body.getSecret());
         return new ResponseEntity<>(new ClientValidityCheckResponseBody(isValid), HttpStatus.OK);
     }
