@@ -1,15 +1,17 @@
 CREATE TABLE table_grouping (
     group_id BINARY(16) NOT NULL,
     group_name VARCHAR(50) UNIQUE,
+    enabled BOOLEAN DEFAULT true,
     PRIMARY KEY (group_id),
     INDEX (group_name)
 );
 
 CREATE TABLE table_info (
     table_id BINARY(16) NOT NULL,
-    number INT UNIQUE,
+    number SMALLINT,
     table_alias VARCHAR(50) UNIQUE,
     group_id BINARY(16) NOT NULL,
+    enabled BOOLEAN DEFAULT true,
     PRIMARY KEY (table_id),
     FOREIGN KEY (group_id) REFERENCES table_grouping (group_id),
     INDEX (number)
@@ -29,9 +31,11 @@ CREATE TABLE order_contents (
     order_id BINARY(16) NOT NULL,
     product_id BINARY(16) NOT NULL,
     notes VARCHAR(200),
-    paid VARCHAR(20) NOT NULL,
+    paid BOOLEAN NOT NULL,
     last_updated TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     time_put TIMESTAMP NOT NULL,
+    discount_percentage SMALLINT,
+    fixed_discount SMALLINT,
     PRIMARY KEY (order_contents_id),
     FOREIGN KEY (order_id) REFERENCES order_info (order_id),
     FOREIGN KEY (product_id) REFERENCES product (product_id),
