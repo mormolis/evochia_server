@@ -8,6 +8,7 @@ public final class ProductSQLStatements {
     public static final String PRODUCT_SELECT_ALL_BY_CATEGORY = "SELECT * FROM product WHERE category_id=?";
     public static final String PRODUCT_SELECT_ALL_ENABLED_BY_CATEGORY = "SELECT * FROM product WHERE category_id=? AND enabled=?";
     public static final String PRODUCT_SELECT_BY_PRODUCT_ID = "SELECT * FROM product WHERE product_id=?";
+    public static final String PRODUCT_UPDATE = "UPDATE product SET name=?, description=?, price=?, enabled=? WHERE product_id=?";
 
     private ProductSQLStatements() {
     }

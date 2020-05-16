@@ -81,6 +81,16 @@ public class ProductCategoryJDBCRepository implements ProductCategoryRepository<
         jdbcTemplate.update(PRODUCT_CATEGORIES_DELETE_CATEGORY, binaryProductCategoryId);
     }
 
+    @Override
+    public void updateProductCategory(ProductCategoryDto productCategoryDto) {
+
+        jdbcTemplate.update(PRODUCT_CATEGORIES_UPDATE,
+                productCategoryDto.getProductCategoryName(),
+                productCategoryDto.isEnabled(),
+                uuidPersistenceTransformer.fromString(productCategoryDto.getProductCategoryId())
+        );
+    }
+
     private ProductCategoryDto parseProductCategory(ResultSet resultSet, int i) throws SQLException {
         return new ProductCategoryDto(
                 uuidPersistenceTransformer.getUUIDFromBytes(resultSet.getBytes("category_id")),

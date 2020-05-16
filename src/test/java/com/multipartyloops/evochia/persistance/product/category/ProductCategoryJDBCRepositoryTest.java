@@ -103,6 +103,18 @@ class ProductCategoryJDBCRepositoryTest extends JDBCTest {
         assertThat(productCategoryJDBCRepository.getProductCategoryById(deleted.getProductCategoryId()).isEmpty()).isTrue();
     }
 
+    @Test
+    void canUpdateACategory(){
+        ProductCategoryDto productCategory = new ProductCategoryDto(aCategoryId(), "aCategoryName", true);
+        productCategoryJDBCRepository.addProductCategory(productCategory);
+
+        ProductCategoryDto updatedCategory = new ProductCategoryDto(productCategory.getProductCategoryId(), "anUpdatedCategory", false);
+        productCategoryJDBCRepository.updateProductCategory(updatedCategory);
+
+        assertThat(productCategoryJDBCRepository.getProductCategoryById(productCategory.getProductCategoryId()).get())
+                .isEqualTo(updatedCategory);
+    }
+
     private static String aCategoryId() {
         return UUID.randomUUID().toString();
     }

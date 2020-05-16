@@ -16,4 +16,6 @@ public interface ProductCategoryRepository<T> {
     void addProductCategory(T productCategoryDto);
 
     void deleteProductCategoryById(String productCategoryId);
+
+    void updateProductCategory(T productCategoryDto);
 }

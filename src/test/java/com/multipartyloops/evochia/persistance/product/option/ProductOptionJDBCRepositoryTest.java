@@ -75,6 +75,16 @@ class ProductOptionJDBCRepositoryTest extends ProductJDBCTest {
                 .isEqualTo(0);
     }
 
+    @Test
+    void canUpdateAnOption() {
+        List<ProductOptionDto> productOptionDtos = storesOptionsOfAProduct();
+        String toUpdate = productOptionDtos.get(2).getProductOptionId();
+
+        productOptionJDBCRepository.updateProductOption("anUpdatedVariation", BigDecimal.valueOf(1.11), toUpdate);
+
+        assertThat(productOptionJDBCRepository.getProductOptionById(toUpdate).get())
+                .isEqualTo(new ProductOptionDto(toUpdate, productOptionDtos.get(2).getProductId(), "anUpdatedVariation", BigDecimal.valueOf(1.11)));
+    }
 
     List<ProductOptionDto> storesOptionsOfAProduct() {
         ProductCategoryDto productCategoryDto = insertACategory();
@@ -90,6 +100,4 @@ class ProductOptionJDBCRepositoryTest extends ProductJDBCTest {
 
         return listOfOptions;
     }
-
-
 }

@@ -17,4 +17,6 @@ public interface ProductRepository<T> {
 
     Optional<T> getProductById(String productId);
 
+    void updateProduct(T product);
+
 }

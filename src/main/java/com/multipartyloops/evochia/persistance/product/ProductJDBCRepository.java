@@ -92,7 +92,7 @@ public class ProductJDBCRepository implements ProductRepository<ProductDto> {
                 this::parseProductWithoutOptions,
                 binaryProductId);
 
-        if(productById.size() == 1) {
+        if (productById.size() == 1) {
             List<ProductOptionDto> optionsByProductId = productOptionRepository.getOptionsByProductId(productId);
             ProductDto productDto = productById.get(0);
             productDto.setProductOptions(optionsByProductId);
@@ -100,6 +100,18 @@ public class ProductJDBCRepository implements ProductRepository<ProductDto> {
         }
 
         return Optional.empty();
+    }
+
+    @Override
+    public void updateProduct(ProductDto product) {
+        jdbcTemplate.update(
+                PRODUCT_UPDATE,
+                product.getName(),
+                product.getDescription(),
+                product.getPrice(),
+                product.isEnabled(),
+                uuidPersistenceTransformer.fromString(product.getProductId())
+        );
     }
 
     private ProductDto parseProductWithoutOptions(ResultSet resultSet, int _i) throws SQLException {

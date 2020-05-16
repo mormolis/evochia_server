@@ -105,6 +105,19 @@ class ProductJDBCRepositoryTest extends ProductJDBCTest {
         assertThat(enabledProducts).containsExactlyInAnyOrder(allProducts.toArray(new ProductDto[0]));
     }
 
+    @Test
+    void canUpdateAProduct(){
+        ProductCategoryDto productCategoryOne = insertACategory();
+        List<ProductDto> products = insertAFewProductsUnderACategory(productCategoryOne.getProductCategoryId(), true);
+        ProductDto productToUpdate = products.get(0);
+        ProductDto updated = new ProductDto(productToUpdate.getProductId(),productToUpdate.getCategoryId(),"anUpdatedName","anUpdatedDescription", BigDecimal.valueOf(1.11),false, productToUpdate.getProductOptions());
+
+        productJDBCRepository.updateProduct(updated);
+
+        assertThat(productJDBCRepository.getProductById(productToUpdate.getProductId()).get())
+                .isEqualTo(updated);
+    }
+
     private List<ProductDto> insertAFewProductsUnderACategory(String categoryId, Boolean isEnabled){
 
         return IntStream.range(0,5)
