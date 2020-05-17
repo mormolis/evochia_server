@@ -15,11 +15,11 @@ import java.util.Map;
 
 @RestController
 @RequestMapping(value = "/users")
-public class CreateUserController {
+public class UserController {
 
     private final UserService userService;
 
-    public CreateUserController(UserService userService) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 

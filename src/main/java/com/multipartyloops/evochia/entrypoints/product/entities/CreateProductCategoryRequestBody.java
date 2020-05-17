@@ -1,4 +1,4 @@
-package com.multipartyloops.evochia.core.product.entities;
+package com.multipartyloops.evochia.entrypoints.product.entities;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,10 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ProductCategoryDto {
-
-    @JsonProperty
-    private String productCategoryId;
+public class CreateProductCategoryRequestBody {
 
     @JsonProperty
     private String productCategoryName;

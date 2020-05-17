@@ -6,6 +6,8 @@ import com.multipartyloops.evochia.configuration.exceptions.TokenNotInTheRightFo
 import com.multipartyloops.evochia.configuration.exceptions.UnauthorizedUserException;
 import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsException;
 import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsFormatException;
+import com.multipartyloops.evochia.core.product.exceptions.InvalidCategoryNameException;
+import com.multipartyloops.evochia.core.product.exceptions.InvalidProductCategoryId;
 import com.multipartyloops.evochia.entrypoints.exceptions.dtos.ErrorResponseBody;
 import com.multipartyloops.evochia.persistance.exceptions.RowNotFoundException;
 import org.springframework.http.HttpHeaders;
@@ -58,7 +60,10 @@ public class EvochiaExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler(value = {IllegalArgumentException.class, InvalidCredentialsFormatException.class,
             TokenNotInTheRightFormatException.class,
-            AccessTokenNotProvidedException.class})
+            AccessTokenNotProvidedException.class,
+            InvalidCategoryNameException.class,
+            InvalidProductCategoryId.class
+    })
     protected ResponseEntity<Object> badRequest(RuntimeException ex, WebRequest request) {
         Object bodyOfResponse = new ErrorResponseBody(ex.getMessage());
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
