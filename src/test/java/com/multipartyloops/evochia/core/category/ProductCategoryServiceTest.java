@@ -3,6 +3,8 @@ package com.multipartyloops.evochia.core.category;
 import com.multipartyloops.evochia.core.product.category.ProductCategoryService;
 import com.multipartyloops.evochia.core.product.entities.ProductCategoryDto;
 import com.multipartyloops.evochia.core.product.exceptions.InvalidCategoryNameException;
+import com.multipartyloops.evochia.core.product.exceptions.InvalidProductCategoryId;
+import com.multipartyloops.evochia.core.product.exceptions.ProductCategoryCouldNotBeFoundException;
 import com.multipartyloops.evochia.persistance.product.category.ProductCategoryRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,6 +35,43 @@ class ProductCategoryServiceTest {
     @BeforeEach
     void setUp() {
         productCategoryService = new ProductCategoryService(productCategoryRepositoryMock);
+    }
+
+    @Test
+    void getByIdThrowsInvalidProductCategoryIdWhenIdIsNull(){
+
+        assertThatThrownBy(()->productCategoryService.getById(null))
+                .hasMessage("Error related to the product category id provided")
+                .isInstanceOf(InvalidProductCategoryId.class);
+    }
+
+    @Test
+    void getByIdThrowsInvalidProductCategoryIdWhenIdIsEmpty(){
+
+        assertThatThrownBy(()->productCategoryService.getById(""))
+                .hasMessage("Error related to the product category id provided")
+                .isInstanceOf(InvalidProductCategoryId.class);
+    }
+
+    @Test
+    void getByIdThrowsExceptionWhenRepositoryReturnsAnEmptyOptional(){
+        given(productCategoryRepositoryMock.getProductCategoryById(A_PRODUCT_CATEGORY_ID))
+                .willReturn(Optional.empty());
+
+        assertThatThrownBy(()->productCategoryService.getById(A_PRODUCT_CATEGORY_ID))
+                .isInstanceOf(ProductCategoryCouldNotBeFoundException.class)
+                .hasMessage("Product category not found");
+    }
+
+    @Test
+    void getByIdReturnsValueFromRepository(){
+        ProductCategoryDto retrievedByRepository = new ProductCategoryDto(A_PRODUCT_CATEGORY_ID, "aName", true);
+        given(productCategoryRepositoryMock.getProductCategoryById(A_PRODUCT_CATEGORY_ID))
+                .willReturn(Optional.of(retrievedByRepository));
+
+        ProductCategoryDto byId = productCategoryService.getById(A_PRODUCT_CATEGORY_ID);
+
+        assertThat(byId).isEqualTo(retrievedByRepository);
     }
 
     @Test

@@ -11,5 +11,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface AuthRequirement {
 
-    Roles[] allow() default {Roles.ADMIN, Roles.FINANCE, Roles.STAFF};
+    Roles[] allow() default {Roles.ADMIN, Roles.FINANCE, Roles.SENIOR_STAFF, Roles.STAFF};
 }

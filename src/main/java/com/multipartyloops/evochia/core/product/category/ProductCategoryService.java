@@ -3,6 +3,7 @@ package com.multipartyloops.evochia.core.product.category;
 import com.multipartyloops.evochia.core.product.entities.ProductCategoryDto;
 import com.multipartyloops.evochia.core.product.exceptions.InvalidCategoryNameException;
 import com.multipartyloops.evochia.core.product.exceptions.InvalidProductCategoryId;
+import com.multipartyloops.evochia.core.product.exceptions.ProductCategoryCouldNotBeFoundException;
 import com.multipartyloops.evochia.persistance.product.category.ProductCategoryRepository;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,11 @@ public class ProductCategoryService {
         this.productCategoryRepository = productCategoryRepository;
     }
 
+    public ProductCategoryDto getById(String productCategoryId) {
+        checkIdNullOrEmpty(productCategoryId);
+        return productCategoryRepository.getProductCategoryById(productCategoryId)
+                .orElseThrow(() -> new ProductCategoryCouldNotBeFoundException("Product category not found"));
+    }
 
     public List<ProductCategoryDto> getAll() {
         List<ProductCategoryDto> allProductCategories = productCategoryRepository.getAllProductCategories();
@@ -42,12 +48,10 @@ public class ProductCategoryService {
         productCategoryRepository.updateProductCategory(new ProductCategoryDto(productCategoryId, updatedName, updatedEnabledValue));
     }
 
-
     public void delete(String productCategoryId) {
         checkIdNullOrEmpty(productCategoryId);
         productCategoryRepository.deleteProductCategoryById(productCategoryId);
     }
-
 
     public void enableById(String productCategoryId) {
         Optional<ProductCategoryDto> productCategoryById = productCategoryRepository.getProductCategoryById(productCategoryId);
@@ -82,7 +86,7 @@ public class ProductCategoryService {
     }
 
     private void checkIdNullOrEmpty(String productCategoryId) {
-        if (productCategoryId == null || productCategoryId.isEmpty()) {
+        if (productCategoryId == null || "".equals(productCategoryId)) {
             throw new InvalidProductCategoryId("Error related to the product category id provided");
         }
     }

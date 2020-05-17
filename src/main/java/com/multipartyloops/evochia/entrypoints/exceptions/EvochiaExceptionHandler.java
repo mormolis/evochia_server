@@ -8,6 +8,7 @@ import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsEx
 import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsFormatException;
 import com.multipartyloops.evochia.core.product.exceptions.InvalidCategoryNameException;
 import com.multipartyloops.evochia.core.product.exceptions.InvalidProductCategoryId;
+import com.multipartyloops.evochia.core.product.exceptions.ProductCategoryCouldNotBeFoundException;
 import com.multipartyloops.evochia.entrypoints.exceptions.dtos.ErrorResponseBody;
 import com.multipartyloops.evochia.persistance.exceptions.RowNotFoundException;
 import org.springframework.http.HttpHeaders;
@@ -36,7 +37,7 @@ public class EvochiaExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     //TODO: think about the NumberFormatException
-    @ExceptionHandler(value = {RowNotFoundException.class, NumberFormatException.class})
+    @ExceptionHandler(value = {RowNotFoundException.class, NumberFormatException.class, ProductCategoryCouldNotBeFoundException.class})
     protected ResponseEntity<Object> valueNotFound(RuntimeException ex, WebRequest request) {
         String message = ex.getMessage();
         if (ex instanceof NumberFormatException) {
