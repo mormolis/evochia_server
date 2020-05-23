@@ -4,6 +4,7 @@ import com.multipartyloops.evochia.core.product.entities.ProductDto;
 import com.multipartyloops.evochia.core.product.entities.ProductOptionDto;
 import com.multipartyloops.evochia.persistance.UuidPersistenceTransformer;
 import com.multipartyloops.evochia.persistance.product.option.ProductOptionRepository;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
@@ -30,14 +31,18 @@ public class ProductJDBCRepository implements ProductRepository<ProductDto> {
     @Override
     public void insertProduct(ProductDto product) {
 
-        jdbcTemplate.update(PRODUCT_INSERTION,
-                uuidPersistenceTransformer.fromString(product.getProductId()),
-                uuidPersistenceTransformer.fromString(product.getCategoryId()),
-                product.getName(),
-                product.getDescription(),
-                product.getPrice(),
-                product.isEnabled()
-        );
+        try {
+            jdbcTemplate.update(PRODUCT_INSERTION,
+                    uuidPersistenceTransformer.fromString(product.getProductId()),
+                    uuidPersistenceTransformer.fromString(product.getCategoryId()),
+                    product.getName(),
+                    product.getDescription(),
+                    product.getPrice(),
+                    product.isEnabled()
+            );
+        } catch (DataIntegrityViolationException e) {
+            throw new IllegalArgumentException("Category id is not matching an existing category");
+        }
 
         product.getProductOptions()
                 .forEach(productOptionRepository::insertOption);

@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Map;
 
 @RestController
-@RequestMapping(value = "/product/categories")
+@RequestMapping(value = "/products/categories")
 public class CategoriesController {
 
     private final ProductCategoryService productCategoryService;

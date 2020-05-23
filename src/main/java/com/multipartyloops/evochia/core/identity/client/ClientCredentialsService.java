@@ -1,8 +1,8 @@
 package com.multipartyloops.evochia.core.identity.client;
 
 import com.multipartyloops.evochia.core.identity.commons.PasswordService;
-import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsFormatException;
 import com.multipartyloops.evochia.core.identity.entities.ClientCredentialsDto;
+import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsFormatException;
 import com.multipartyloops.evochia.persistance.exceptions.RowNotFoundException;
 import com.multipartyloops.evochia.persistance.identity.clientcredentials.ClientCredentialsRepository;
 import org.springframework.stereotype.Service;
@@ -34,7 +34,7 @@ public class ClientCredentialsService {
         return clientCredentialsDto.filter(credentialsDto -> passwordService.passwordsAreTheSame(secret, credentialsDto.getSecret())).isPresent();
     }
 
-    public void addNewClientCredentials(ClientCredentialsDto clientCredentialsDto){
+    public void addNewClientCredentials(ClientCredentialsDto clientCredentialsDto) {
 
         checkIfDataIsValid(clientCredentialsDto);
         String hashedSecret = passwordService.hashPassword(clientCredentialsDto.getSecret());
@@ -42,24 +42,24 @@ public class ClientCredentialsService {
         clientCredentialsRepository.storeClientCredentials(clientCredentialsDto);
     }
 
-    public void deleteCredentialsByClientId(String clientId){
+    public void deleteCredentialsByClientId(String clientId) {
         checkClientIdFormatValidity(clientId);
         clientCredentialsRepository.deleteByClientId(clientId);
     }
 
     private void checkIfDataIsValid(ClientCredentialsDto clientCredentialsDto) {
 
-        if(clientCredentialsDto.getClientId() == null){
+        if (clientCredentialsDto.getClientId() == null) {
             throw new InvalidCredentialsFormatException("ClientId cannot be null");
         }
 
         checkClientIdFormatValidity(clientCredentialsDto.getClientId());
 
-        if(clientCredentialsDto.getSecret() == null) {
+        if (clientCredentialsDto.getSecret() == null) {
             throw new InvalidCredentialsFormatException("Secret must not be null");
         }
 
-        if(clientCredentialsDto.getSecret().length() < 8){
+        if (clientCredentialsDto.getSecret().length() < 8) {
             throw new InvalidCredentialsFormatException("Secret must be at least 8 characters long");
         }
     }
@@ -68,7 +68,7 @@ public class ClientCredentialsService {
     private void checkClientIdFormatValidity(String clientId) {
         try {
             UUID.fromString(clientId);
-        } catch (IllegalArgumentException e){
+        } catch (IllegalArgumentException e) {
             throw new InvalidCredentialsFormatException("ClientId should be in the form of UUID");
         }
     }

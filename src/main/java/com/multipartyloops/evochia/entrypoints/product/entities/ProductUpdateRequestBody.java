@@ -1,6 +1,8 @@
-package com.multipartyloops.evochia.core.product.entities;
+package com.multipartyloops.evochia.entrypoints.product.entities;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.multipartyloops.evochia.core.product.entities.ProductOptionDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -11,27 +13,22 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductDto {
+@JsonInclude(JsonInclude.Include.NON_NULL)
+public class ProductUpdateRequestBody {
 
-    @JsonProperty("productId")
-    private String productId;
-
-    @JsonProperty("categoryId")
-    private String categoryId;
-
-    @JsonProperty("name")
+    @JsonProperty
     private String name;
 
-    @JsonProperty("description")
+    @JsonProperty
     private String description;
 
-    @JsonProperty("price")
+    @JsonProperty
     private BigDecimal price;
 
-    @JsonProperty("enabled")
+    @JsonProperty
     private boolean enabled;
 
-    @JsonProperty("productOptions")
+    @JsonProperty
     private List<ProductOptionDto> productOptions;
 
 }

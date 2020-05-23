@@ -2,7 +2,6 @@ package com.multipartyloops.evochia.core.product;
 
 import com.multipartyloops.evochia.core.product.entities.ProductDto;
 import com.multipartyloops.evochia.core.product.entities.ProductOptionDto;
-import com.multipartyloops.evochia.core.product.exceptions.CategoryDoesNotExistException;
 import com.multipartyloops.evochia.core.product.exceptions.MandatoryFieldNotPassedException;
 import com.multipartyloops.evochia.core.product.exceptions.ProductNotFoundException;
 import com.multipartyloops.evochia.persistance.product.ProductRepository;
@@ -169,9 +168,7 @@ class ProductServiceTest {
         productService.updateProduct(A_PRODUCT_ID, null, null, null, null, productOptions);
 
         then(productOptionRepositoryMock).should().deleteAllOptionsOfAProduct(A_PRODUCT_ID);
-        productOptions.forEach(option -> {
-            then(productOptionRepositoryMock).should().insertOption(option);
-        });
+        productOptions.forEach(option -> then(productOptionRepositoryMock).should().insertOption(option));
     }
 
     @Test
@@ -202,8 +199,8 @@ class ProductServiceTest {
         doThrow(new DataIntegrityViolationException("a message")).when(productRepositoryMock).updateProductsCategory(A_PRODUCT_ID, A_CATEGORY_ID);
 
         assertThatThrownBy(() -> productService.changeCategoryOfAProduct(A_PRODUCT_ID, A_CATEGORY_ID))
-                .isInstanceOf(CategoryDoesNotExistException.class)
-                .hasMessage("Category Id does not exist");
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Product or/and category do not exist");
     }
 
     @Test

@@ -6,9 +6,7 @@ import com.multipartyloops.evochia.configuration.exceptions.TokenNotInTheRightFo
 import com.multipartyloops.evochia.configuration.exceptions.UnauthorizedUserException;
 import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsException;
 import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsFormatException;
-import com.multipartyloops.evochia.core.product.exceptions.InvalidCategoryNameException;
-import com.multipartyloops.evochia.core.product.exceptions.InvalidProductCategoryId;
-import com.multipartyloops.evochia.core.product.exceptions.ProductCategoryCouldNotBeFoundException;
+import com.multipartyloops.evochia.core.product.exceptions.*;
 import com.multipartyloops.evochia.entrypoints.exceptions.dtos.ErrorResponseBody;
 import com.multipartyloops.evochia.persistance.exceptions.RowNotFoundException;
 import org.springframework.http.HttpHeaders;
@@ -37,11 +35,15 @@ public class EvochiaExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     //TODO: think about the NumberFormatException
-    @ExceptionHandler(value = {RowNotFoundException.class, NumberFormatException.class, ProductCategoryCouldNotBeFoundException.class})
+    //UUIDFormatChecker utility must be used
+    @ExceptionHandler(value = {RowNotFoundException.class, NumberFormatException.class,
+            ProductCategoryCouldNotBeFoundException.class,
+            ProductNotFoundException.class,
+            CategoryDoesNotExistException.class})
     protected ResponseEntity<Object> valueNotFound(RuntimeException ex, WebRequest request) {
         String message = ex.getMessage();
         if (ex instanceof NumberFormatException) {
-            message = "User not found.";
+            message = "Resource not found.";
         }
         Object bodyOfResponse = new ErrorResponseBody(message);
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.NOT_FOUND, request);
@@ -63,7 +65,8 @@ public class EvochiaExceptionHandler extends ResponseEntityExceptionHandler {
             TokenNotInTheRightFormatException.class,
             AccessTokenNotProvidedException.class,
             InvalidCategoryNameException.class,
-            InvalidProductCategoryId.class
+            InvalidProductCategoryId.class,
+            MandatoryFieldNotPassedException.class
     })
     protected ResponseEntity<Object> badRequest(RuntimeException ex, WebRequest request) {
         Object bodyOfResponse = new ErrorResponseBody(ex.getMessage());
