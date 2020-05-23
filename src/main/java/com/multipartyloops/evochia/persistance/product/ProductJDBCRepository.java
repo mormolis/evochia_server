@@ -114,6 +114,15 @@ public class ProductJDBCRepository implements ProductRepository<ProductDto> {
         );
     }
 
+    @Override
+    public void updateProductsCategory(String productId, String newCategoryId) {
+
+        jdbcTemplate.update(PRODUCT_CATEGORY_UPDATE,
+                uuidPersistenceTransformer.fromString(newCategoryId),
+                uuidPersistenceTransformer.fromString(productId)
+        );
+    }
+
     private ProductDto parseProductWithoutOptions(ResultSet resultSet, int _i) throws SQLException {
         return new ProductDto(
                 uuidPersistenceTransformer.getUUIDFromBytes(resultSet.getBytes("product_id")),

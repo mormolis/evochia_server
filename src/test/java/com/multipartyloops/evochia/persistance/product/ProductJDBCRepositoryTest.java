@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.math.BigDecimal;
 import java.util.Collections;
@@ -19,6 +20,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
@@ -116,6 +118,30 @@ class ProductJDBCRepositoryTest extends ProductJDBCTest {
 
         assertThat(productJDBCRepository.getProductById(productToUpdate.getProductId()).get())
                 .isEqualTo(updated);
+    }
+
+    @Test
+    void aCategoryOfAProductCanBeUpdated(){
+        ProductCategoryDto from = insertACategory();
+        ProductCategoryDto to = insertACategory();
+        List<ProductDto> products = insertAFewProductsUnderACategory(from.getProductCategoryId(), true);
+
+        ProductDto productToUpdate = products.get(0);
+
+        productJDBCRepository.updateProductsCategory(productToUpdate.getProductId(), to.getProductCategoryId());
+
+        assertThat(productJDBCRepository.getProductById(productToUpdate.getProductId()).get().getCategoryId()).isEqualTo(to.getProductCategoryId());
+    }
+
+    @Test
+    void aCategoryOfAProductCanNotBeUpdatedWhenNewCategoryDoesNotExist(){
+        ProductCategoryDto from = insertACategory();
+        List<ProductDto> products = insertAFewProductsUnderACategory(from.getProductCategoryId(), true);
+
+        ProductDto productToUpdate = products.get(0);
+
+        assertThatThrownBy(()->productJDBCRepository.updateProductsCategory(productToUpdate.getProductId(), UUID.randomUUID().toString()))
+                .isInstanceOf(DataIntegrityViolationException.class);
     }
 
     private List<ProductDto> insertAFewProductsUnderACategory(String categoryId, Boolean isEnabled){

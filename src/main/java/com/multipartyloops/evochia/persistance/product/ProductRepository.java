@@ -19,4 +19,6 @@ public interface ProductRepository<T> {
 
     void updateProduct(T product);
 
+    void updateProductsCategory(String productId, String newCategoryId);
+
 }
