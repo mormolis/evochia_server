@@ -48,8 +48,8 @@ public class ProductService {
     }
 
     public List<ProductDto> getAllProductsByCategory(String categoryId) {
-        UUIDFormatChecker.confirmOrThrow(categoryId, new CategoryDoesNotExistException("Category Id does not exist"));
 
+        UUIDFormatChecker.confirmOrThrow(categoryId, new CategoryDoesNotExistException("Category Id does not exist"));
         return productRepository.getProductsByCategory(categoryId);
     }
 
@@ -61,7 +61,7 @@ public class ProductService {
     public List<ProductDto> getEnabledProductsByCategory(String categoryId) {
         try {
             return productRepository.getEnabledProductsByCategory(categoryId);
-        } catch (NumberFormatException e) {
+        } catch (IllegalArgumentException e) {
             return new ArrayList<>();
         }
     }

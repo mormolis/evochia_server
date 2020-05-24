@@ -7,7 +7,7 @@ public class UUIDFormatChecker {
     public static void confirmOrThrow(String toParse, RuntimeException throwable) {
         try{
             UUID.fromString(toParse);
-        } catch (NumberFormatException e){
+        } catch (IllegalArgumentException e){
             throw throwable;
         }
     }

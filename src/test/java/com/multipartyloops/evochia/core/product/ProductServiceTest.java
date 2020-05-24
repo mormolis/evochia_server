@@ -2,6 +2,7 @@ package com.multipartyloops.evochia.core.product;
 
 import com.multipartyloops.evochia.core.product.entities.ProductDto;
 import com.multipartyloops.evochia.core.product.entities.ProductOptionDto;
+import com.multipartyloops.evochia.core.product.exceptions.CategoryDoesNotExistException;
 import com.multipartyloops.evochia.core.product.exceptions.MandatoryFieldNotPassedException;
 import com.multipartyloops.evochia.core.product.exceptions.ProductNotFoundException;
 import com.multipartyloops.evochia.persistance.product.ProductRepository;
@@ -63,6 +64,22 @@ class ProductServiceTest {
         assertThat(passed).isEqualTo(productPassedToRepository);
     }
 
+    @Test
+    void productInsertionWillGenerateProductOptionsIdsForTheOptionsPassed() {
+        List<ProductOptionDto> productOptions = List.of(new ProductOptionDto());
+        ProductDto passed = new ProductDto(null, A_CATEGORY_ID, A_PRODUCT_NAME, A_DESCRIPTION, BigDecimal.valueOf(1.11), true, productOptions);
+
+        productService.addProduct(passed);
+
+        ArgumentCaptor<ProductDto> productDtoArgumentCaptor = ArgumentCaptor.forClass(ProductDto.class);
+        then(productRepositoryMock).should().insertProduct(productDtoArgumentCaptor.capture());
+        ProductDto productPassedToRepository = productDtoArgumentCaptor.getValue();
+        List<ProductOptionDto> storedProductOptions = productPassedToRepository.getProductOptions();
+        assertThat(storedProductOptions.get(0).getProductId()).isNotNull();
+        assertThat(storedProductOptions.get(0).getProductOptionId()).isNotNull();
+
+    }
+
 
     @Test
     void insertProductThrowsExceptionWhenTheCategoryIdIsNotPassed() {
@@ -101,6 +118,14 @@ class ProductServiceTest {
     }
 
     @Test
+    void deleteWillThrowAProductNotFoundExceptionWhenATheProductIdIsNotAUUID() {
+        assertThatThrownBy(() -> productService.deleteProduct("non_uuid_format"))
+                .hasMessage("Product not found")
+                .isInstanceOf(ProductNotFoundException.class);
+    }
+
+
+    @Test
     void returnsAllProductsByCategory() {
 
         List<ProductDto> products = aListOfProducts();
@@ -109,6 +134,14 @@ class ProductServiceTest {
         List<ProductDto> productsByCategory = productService.getAllProductsByCategory(A_CATEGORY_ID);
 
         assertThat(productsByCategory).containsAll(products);
+    }
+
+    @Test
+    void getAllProductByCategoryWillThrowIfCategoryIdIsNotUUID() {
+
+        assertThatThrownBy(() -> productService.getAllProductsByCategory("non uuid"))
+                .isInstanceOf(CategoryDoesNotExistException.class)
+                .hasMessage("Category Id does not exist");
     }
 
     @Test
@@ -131,6 +164,16 @@ class ProductServiceTest {
     }
 
     @Test
+    void getEnabledProductsWillReturnAnEmptyListWhenCategoryIdIsNotAUUUID() {
+        given(productRepositoryMock.getEnabledProductsByCategory("non-uuid-id"))
+                .willThrow(new IllegalArgumentException());
+
+        List<ProductDto> enabledProductsByCategory = productService.getEnabledProductsByCategory("non-uuid-id");
+
+        assertThat(enabledProductsByCategory).isEmpty();
+    }
+
+    @Test
     void aProductNotFoundExceptionIsThrownWhenAProductCannotBeFoundById() {
 
         when(productRepositoryMock.getProductById(A_PRODUCT_ID)).thenReturn(Optional.empty());
@@ -138,7 +181,6 @@ class ProductServiceTest {
         assertThatThrownBy(() -> productService.getProductById(A_PRODUCT_ID))
                 .isInstanceOf(ProductNotFoundException.class)
                 .hasMessage("Product not found");
-
     }
 
     @Test
@@ -151,8 +193,14 @@ class ProductServiceTest {
     }
 
     @Test
+    void productUpdateThrowsExceptionWhenProductIdIsNotUUID() {
+        assertThatThrownBy(() -> productService.updateProduct("nonUuild", "name", "desc", BigDecimal.valueOf(0), true, Collections.emptyList()))
+                .hasMessage("Product not found")
+                .isInstanceOf(ProductNotFoundException.class);
+    }
+
+    @Test
     void productUpdateThrowsExceptionWhenIdIsNotPassed() {
-        ProductDto aProductWithoutId = new ProductDto(null, UUID.randomUUID().toString(), "aname", "adesription", BigDecimal.valueOf(10.11), true, Collections.emptyList());
 
         assertThatThrownBy(() -> productService.updateProduct(null, null, null, null, null, null))
                 .isInstanceOf(MandatoryFieldNotPassedException.class)
@@ -209,6 +257,22 @@ class ProductServiceTest {
         productService.changeCategoryOfAProduct(A_PRODUCT_ID, A_CATEGORY_ID);
 
         then(productRepositoryMock).should().updateProductsCategory(A_PRODUCT_ID, A_CATEGORY_ID);
+    }
+
+    @Test
+    void changeCategoryWillThrowExceptionWhenProductIdIsNotUUID() {
+
+        assertThatThrownBy(() -> productService.changeCategoryOfAProduct("nonUuid", UUID.randomUUID().toString()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Product not found");
+    }
+
+    @Test
+    void changeCategoryWillThrowExceptionWhenCategoryIsNotUUID() {
+
+        assertThatThrownBy(() -> productService.changeCategoryOfAProduct(UUID.randomUUID().toString(), "nonUuid"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Category Id does not exist");
     }
 
     private List<ProductOptionDto> aListOfProductOptions() {
