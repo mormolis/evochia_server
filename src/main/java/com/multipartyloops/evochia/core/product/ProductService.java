@@ -59,6 +59,7 @@ public class ProductService {
     }
 
     public List<ProductDto> getEnabledProductsByCategory(String categoryId) {
+
         try {
             return productRepository.getEnabledProductsByCategory(categoryId);
         } catch (IllegalArgumentException e) {
