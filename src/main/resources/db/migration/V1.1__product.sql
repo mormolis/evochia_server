@@ -1,3 +1,10 @@
+-- either printers or devices that receive orders
+CREATE TABLE terminals (
+    terminal_id BINARY(16) NOT NULL,
+    name VARCHAR(50) NOT NULL UNIQUE,
+    PRIMARY KEY (terminal_id)
+);
+
 CREATE TABLE product_categories (
     category_id BINARY(16) NOT NULL,
     name VARCHAR(50) NOT NULL UNIQUE,
@@ -9,12 +16,14 @@ CREATE TABLE product_categories (
 CREATE TABLE product (
     product_id BINARY(16) NOT NULL,
     category_id BINARY(16) NOT NULL,
+    preferred_terminal_id BINARY(16) NOT NULL,
     name VARCHAR(50) NOT NULL,
     description VARCHAR(300),
     price DECIMAL(8,2) NOT NULL,
     enabled BOOLEAN DEFAULT true,
     PRIMARY KEY (product_id),
     FOREIGN KEY (category_id) REFERENCES product_categories (category_id),
+    FOREIGN KEY (preferred_terminal_id) REFERENCES terminals (terminal_id),
     INDEX (category_id),
     INDEX (enabled)
 );
