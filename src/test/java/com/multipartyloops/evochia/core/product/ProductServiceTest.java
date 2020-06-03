@@ -5,6 +5,7 @@ import com.multipartyloops.evochia.core.product.entities.ProductOptionDto;
 import com.multipartyloops.evochia.core.product.exceptions.CategoryDoesNotExistException;
 import com.multipartyloops.evochia.core.product.exceptions.MandatoryFieldNotPassedException;
 import com.multipartyloops.evochia.core.product.exceptions.ProductNotFoundException;
+import com.multipartyloops.evochia.core.terminal.dto.TerminalDto;
 import com.multipartyloops.evochia.persistance.product.ProductRepository;
 import com.multipartyloops.evochia.persistance.product.option.ProductOptionRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -36,6 +37,7 @@ class ProductServiceTest {
     public static final String A_PRODUCT_NAME = "a_product_name";
     public static final String A_DESCRIPTION = "a description";
     public static final String A_PRODUCT_VARIATION = "aProductVariation";
+    public static final String PREFERRED_TERMINAL_ID = UUID.randomUUID().toString();
 
     @Mock
     private ProductRepository<ProductDto> productRepositoryMock;
@@ -53,7 +55,7 @@ class ProductServiceTest {
     @Test
     void canInsertAProduct() {
 
-        ProductDto passed = new ProductDto(null, A_CATEGORY_ID, A_PRODUCT_NAME, A_DESCRIPTION, BigDecimal.valueOf(1.11), true, Collections.emptyList());
+        ProductDto passed = new ProductDto(null, A_CATEGORY_ID, A_PRODUCT_NAME, A_DESCRIPTION, BigDecimal.valueOf(1.11), true, PREFERRED_TERMINAL_ID, Collections.emptyList());
 
         productService.addProduct(passed);
 
@@ -67,7 +69,7 @@ class ProductServiceTest {
     @Test
     void productInsertionWillGenerateProductOptionsIdsForTheOptionsPassed() {
         List<ProductOptionDto> productOptions = List.of(new ProductOptionDto());
-        ProductDto passed = new ProductDto(null, A_CATEGORY_ID, A_PRODUCT_NAME, A_DESCRIPTION, BigDecimal.valueOf(1.11), true, productOptions);
+        ProductDto passed = new ProductDto(null, A_CATEGORY_ID, A_PRODUCT_NAME, A_DESCRIPTION, BigDecimal.valueOf(1.11), true, PREFERRED_TERMINAL_ID, productOptions);
 
         productService.addProduct(passed);
 
@@ -83,7 +85,7 @@ class ProductServiceTest {
 
     @Test
     void insertProductThrowsExceptionWhenTheCategoryIdIsNotPassed() {
-        ProductDto missingCategoryId = new ProductDto(null, null, A_PRODUCT_NAME, A_DESCRIPTION, BigDecimal.valueOf(1.11), true, Collections.emptyList());
+        ProductDto missingCategoryId = new ProductDto(null, null, A_PRODUCT_NAME, A_DESCRIPTION, BigDecimal.valueOf(1.11), true, PREFERRED_TERMINAL_ID, Collections.emptyList());
 
         assertThatThrownBy(() -> productService.addProduct(missingCategoryId))
                 .hasMessage("Product needs to have a category")
@@ -92,7 +94,7 @@ class ProductServiceTest {
 
     @Test
     void insertProductThrowsExceptionWhenTheNameIsNotPassed() {
-        ProductDto missingName = new ProductDto(null, A_CATEGORY_ID, null, A_DESCRIPTION, BigDecimal.valueOf(1.11), true, Collections.emptyList());
+        ProductDto missingName = new ProductDto(null, A_CATEGORY_ID, null, A_DESCRIPTION, BigDecimal.valueOf(1.11), true, PREFERRED_TERMINAL_ID, Collections.emptyList());
 
         assertThatThrownBy(() -> productService.addProduct(missingName))
                 .hasMessage("Product needs to have a name")
@@ -101,7 +103,7 @@ class ProductServiceTest {
 
     @Test
     void insertProductThrowsExceptionWhenThePriceIsNotPassed() {
-        ProductDto missingPrice = new ProductDto(null, A_CATEGORY_ID, A_PRODUCT_NAME, A_DESCRIPTION, null, true, Collections.emptyList());
+        ProductDto missingPrice = new ProductDto(null, A_CATEGORY_ID, A_PRODUCT_NAME, A_DESCRIPTION, null, true, PREFERRED_TERMINAL_ID, Collections.emptyList());
 
         assertThatThrownBy(() -> productService.addProduct(missingPrice))
                 .hasMessage("Product needs to have a price")
@@ -185,7 +187,7 @@ class ProductServiceTest {
 
     @Test
     void aProductCanBeRetrievedById() {
-        ProductDto aProduct = new ProductDto(A_PRODUCT_ID, UUID.randomUUID().toString(), "aname", "adesription", BigDecimal.valueOf(10.11), true, Collections.emptyList());
+        ProductDto aProduct = new ProductDto(A_PRODUCT_ID, UUID.randomUUID().toString(), "aname", "adesription", BigDecimal.valueOf(10.11), true, PREFERRED_TERMINAL_ID, Collections.emptyList());
         when(productRepositoryMock.getProductById(A_PRODUCT_ID)).thenReturn(Optional.of(aProduct));
 
         ProductDto actual = productService.getProductById(A_PRODUCT_ID);
@@ -194,7 +196,7 @@ class ProductServiceTest {
 
     @Test
     void productUpdateThrowsExceptionWhenProductIdIsNotUUID() {
-        assertThatThrownBy(() -> productService.updateProduct("nonUuild", "name", "desc", BigDecimal.valueOf(0), true, Collections.emptyList()))
+        assertThatThrownBy(() -> productService.updateProduct("nonUuild", "name", "desc", BigDecimal.valueOf(0), true, PREFERRED_TERMINAL_ID, Collections.emptyList()))
                 .hasMessage("Product not found")
                 .isInstanceOf(ProductNotFoundException.class);
     }
@@ -202,7 +204,7 @@ class ProductServiceTest {
     @Test
     void productUpdateThrowsExceptionWhenIdIsNotPassed() {
 
-        assertThatThrownBy(() -> productService.updateProduct(null, null, null, null, null, null))
+        assertThatThrownBy(() -> productService.updateProduct(null, null, null, null, null, null, null))
                 .isInstanceOf(MandatoryFieldNotPassedException.class)
                 .hasMessage("Cannot update product without productId");
     }
@@ -213,7 +215,7 @@ class ProductServiceTest {
         List<ProductOptionDto> productOptions = aListOfProductOptions();
         given(productRepositoryMock.getProductById(A_PRODUCT_ID)).willReturn(Optional.of(new ProductDto()));
 
-        productService.updateProduct(A_PRODUCT_ID, null, null, null, null, productOptions);
+        productService.updateProduct(A_PRODUCT_ID, null, null, null, null, null, productOptions);
 
         then(productOptionRepositoryMock).should().deleteAllOptionsOfAProduct(A_PRODUCT_ID);
         productOptions.forEach(option -> then(productOptionRepositoryMock).should().insertOption(option));
@@ -221,23 +223,23 @@ class ProductServiceTest {
 
     @Test
     void productCanBeUpdated() {
-        ProductDto aProductDto = new ProductDto(A_PRODUCT_ID, A_CATEGORY_ID, A_PRODUCT_NAME, A_DESCRIPTION, BigDecimal.valueOf(10.99), true, aListOfProductOptions());
+        ProductDto aProductDto = new ProductDto(A_PRODUCT_ID, A_CATEGORY_ID, A_PRODUCT_NAME, A_DESCRIPTION, BigDecimal.valueOf(10.99), true, PREFERRED_TERMINAL_ID, aListOfProductOptions());
         when(productRepositoryMock.getProductById(A_PRODUCT_ID)).thenReturn(Optional.of(aProductDto));
 
-        productService.updateProduct(A_PRODUCT_ID, "aNewName", "anUpdatedDescription", BigDecimal.valueOf(7.77), false, null);
+        productService.updateProduct(A_PRODUCT_ID, "aNewName", "anUpdatedDescription", BigDecimal.valueOf(7.77), false, PREFERRED_TERMINAL_ID, null);
 
-        then(productRepositoryMock).should().updateProduct(new ProductDto(A_PRODUCT_ID, A_CATEGORY_ID, "aNewName", "anUpdatedDescription", BigDecimal.valueOf(7.77), false, null));
+        then(productRepositoryMock).should().updateProduct(new ProductDto(A_PRODUCT_ID, A_CATEGORY_ID, "aNewName", "anUpdatedDescription", BigDecimal.valueOf(7.77), false, PREFERRED_TERMINAL_ID, null));
     }
 
     @Test
     void updateWillUpdateOnlyNonNullValues() {
-        ProductDto aProductDto = new ProductDto(A_PRODUCT_ID, A_CATEGORY_ID, A_PRODUCT_NAME, A_DESCRIPTION, BigDecimal.valueOf(10.99), true, aListOfProductOptions());
+        ProductDto aProductDto = new ProductDto(A_PRODUCT_ID, A_CATEGORY_ID, A_PRODUCT_NAME, A_DESCRIPTION, BigDecimal.valueOf(10.99), true, PREFERRED_TERMINAL_ID, aListOfProductOptions());
         when(productRepositoryMock.getProductById(A_PRODUCT_ID)).thenReturn(Optional.of(aProductDto));
 
-        productService.updateProduct(A_PRODUCT_ID, null, null, null, null, null);
+        productService.updateProduct(A_PRODUCT_ID, null, null, null, null, null, null);
 
         then(productOptionRepositoryMock).shouldHaveNoMoreInteractions();
-        then(productRepositoryMock).should().updateProduct(new ProductDto(A_PRODUCT_ID, A_CATEGORY_ID, A_PRODUCT_NAME, A_DESCRIPTION, BigDecimal.valueOf(10.99), true, null));
+        then(productRepositoryMock).should().updateProduct(new ProductDto(A_PRODUCT_ID, A_CATEGORY_ID, A_PRODUCT_NAME, A_DESCRIPTION, BigDecimal.valueOf(10.99), true, PREFERRED_TERMINAL_ID, null));
     }
 
 
@@ -283,8 +285,8 @@ class ProductServiceTest {
 
     private List<ProductDto> aListOfProducts() {
         return List.of(
-                new ProductDto(UUID.randomUUID().toString(), UUID.randomUUID().toString(), "aname", "adesription", BigDecimal.valueOf(10.11), true, Collections.emptyList()),
-                new ProductDto(UUID.randomUUID().toString(), UUID.randomUUID().toString(), "aname", "adesription", BigDecimal.valueOf(10.11), true, Collections.emptyList())
+                new ProductDto(UUID.randomUUID().toString(), UUID.randomUUID().toString(), "aname", "adesription", BigDecimal.valueOf(10.11), true, PREFERRED_TERMINAL_ID, Collections.emptyList()),
+                new ProductDto(UUID.randomUUID().toString(), UUID.randomUUID().toString(), "aname", "adesription", BigDecimal.valueOf(10.11), true, PREFERRED_TERMINAL_ID, Collections.emptyList())
         );
     }
 }

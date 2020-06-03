@@ -31,6 +31,9 @@ public class ProductDto {
     @JsonProperty("enabled")
     private boolean enabled;
 
+    @JsonProperty("preferredTerminalId")
+    private String preferredTerminalId;
+
     @JsonProperty("productOptions")
     private List<ProductOptionDto> productOptions;
 

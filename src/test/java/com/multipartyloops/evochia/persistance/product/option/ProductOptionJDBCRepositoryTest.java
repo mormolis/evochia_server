@@ -3,6 +3,7 @@ package com.multipartyloops.evochia.persistance.product.option;
 import com.multipartyloops.evochia.core.product.entities.ProductCategoryDto;
 import com.multipartyloops.evochia.core.product.entities.ProductDto;
 import com.multipartyloops.evochia.core.product.entities.ProductOptionDto;
+import com.multipartyloops.evochia.core.terminal.dto.TerminalDto;
 import com.multipartyloops.evochia.persistance.product.ProductJDBCTest;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,8 @@ class ProductOptionJDBCRepositoryTest extends ProductJDBCTest {
     @Test
     void storesAndRetrievedAnOption() {
         ProductCategoryDto productCategoryDto = insertACategory();
-        ProductDto productDto = insertAProduct(productCategoryDto.getProductCategoryId());
+        TerminalDto terminalDto = insertATerminal();
+        ProductDto productDto = insertAProduct(productCategoryDto.getProductCategoryId(), terminalDto.getTerminalId());
         ProductOptionDto productOptionDto = new ProductOptionDto(
                 UUID.randomUUID().toString(),
                 productDto.getProductId(),
@@ -88,7 +90,8 @@ class ProductOptionJDBCRepositoryTest extends ProductJDBCTest {
 
     List<ProductOptionDto> storesOptionsOfAProduct() {
         ProductCategoryDto productCategoryDto = insertACategory();
-        ProductDto productDto = insertAProduct(productCategoryDto.getProductCategoryId());
+        TerminalDto terminalDto = insertATerminal();
+        ProductDto productDto = insertAProduct(productCategoryDto.getProductCategoryId(), terminalDto.getTerminalId());
         List<ProductOptionDto> listOfOptions = IntStream.range(0, 4).mapToObj(_i -> new ProductOptionDto(
                 UUID.randomUUID().toString(),
                 productDto.getProductId(),

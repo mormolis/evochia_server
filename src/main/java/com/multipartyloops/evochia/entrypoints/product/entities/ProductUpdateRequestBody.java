@@ -29,6 +29,9 @@ public class ProductUpdateRequestBody {
     private boolean enabled;
 
     @JsonProperty
+    private String preferredTerminalId;
+
+    @JsonProperty
     private List<ProductOptionDto> productOptions;
 
 }

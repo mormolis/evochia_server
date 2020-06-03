@@ -2,6 +2,7 @@ package com.multipartyloops.evochia.persistance.product;
 
 import com.multipartyloops.evochia.core.product.entities.ProductCategoryDto;
 import com.multipartyloops.evochia.core.product.entities.ProductDto;
+import com.multipartyloops.evochia.core.terminal.dto.TerminalDto;
 import com.multipartyloops.evochia.persistance.JDBCTest;
 import com.multipartyloops.evochia.persistance.UuidPersistenceTransformer;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -15,31 +16,11 @@ public abstract class ProductJDBCTest extends JDBCTest {
     protected JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
     protected UuidPersistenceTransformer uuidPersistenceTransformer = new UuidPersistenceTransformer();
 
-    protected ProductDto insertAProduct(String categoryId) {
-        ProductDto productDto = new ProductDto(
-                UUID.randomUUID().toString(),
-                categoryId,
-                UUID.randomUUID().toString(),
-                "aDescription",
-                BigDecimal.valueOf(4.99),
-                true,
-                new ArrayList<>()
-        );
-
-        String sql = "INSERT INTO product (product_id, category_id, name, description, price, enabled) VALUES (?, ?, ?, ?, ?, ?)";
-
-        jdbcTemplate.update(sql,
-                uuidPersistenceTransformer.fromString(productDto.getProductId()),
-                uuidPersistenceTransformer.fromString(productDto.getCategoryId()),
-                productDto.getName(),
-                productDto.getDescription(),
-                productDto.getPrice(),
-                productDto.isEnabled()
-        );
-        return productDto;
+    protected ProductDto insertAProduct(String categoryId, String terminalId) {
+        return insertAProduct(categoryId, true, terminalId);
     }
 
-    protected ProductDto insertAProduct(String categoryId, boolean isEnabled) {
+    protected ProductDto insertAProduct(String categoryId, boolean isEnabled, String terminalId) {
         ProductDto productDto = new ProductDto(
                 UUID.randomUUID().toString(),
                 categoryId,
@@ -47,10 +28,11 @@ public abstract class ProductJDBCTest extends JDBCTest {
                 "aDescription",
                 BigDecimal.valueOf(4.99),
                 isEnabled,
+                terminalId,
                 new ArrayList<>()
         );
 
-        String sql = "INSERT INTO product (product_id, category_id, name, description, price, enabled) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO product (product_id, category_id, name, description, price, enabled, preferred_terminal_id) VALUES (?, ?, ?, ?, ?, ?, ?)";
 
         jdbcTemplate.update(sql,
                 uuidPersistenceTransformer.fromString(productDto.getProductId()),
@@ -58,7 +40,8 @@ public abstract class ProductJDBCTest extends JDBCTest {
                 productDto.getName(),
                 productDto.getDescription(),
                 productDto.getPrice(),
-                productDto.isEnabled()
+                productDto.isEnabled(),
+                uuidPersistenceTransformer.fromString(productDto.getPreferredTerminalId())
         );
         return productDto;
     }
@@ -78,5 +61,19 @@ public abstract class ProductJDBCTest extends JDBCTest {
                 categoryDto.getProductCategoryName(),
                 categoryDto.isEnabled());
         return categoryDto;
+    }
+
+    protected TerminalDto insertATerminal() {
+        TerminalDto terminalDto = new TerminalDto(
+                UUID.randomUUID().toString(),
+                UUID.randomUUID().toString()
+        );
+
+        String sql = "INSERT INTO terminals (terminal_id, name) VALUES (?, ?)";
+
+        jdbcTemplate.update(sql,
+                uuidPersistenceTransformer.fromString(terminalDto.getTerminalId()),
+                terminalDto.getName());
+        return terminalDto;
     }
 }

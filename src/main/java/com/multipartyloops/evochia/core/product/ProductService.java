@@ -76,13 +76,13 @@ public class ProductService {
         );
     }
 
-    public void updateProduct(String productId, String name, String description, BigDecimal price, Boolean enabled, List<ProductOptionDto> productOptions) {
+    public void updateProduct(String productId, String name, String description, BigDecimal price, Boolean enabled, String preferredTerminalId, List<ProductOptionDto> productOptions) {
 
         checkProductIdIsPassed(productId);
         UUIDFormatChecker.confirmOrThrow(productId, new ProductNotFoundException("Product not found"));
 
         ProductDto existingProduct = getProductById(productId);
-        ProductDto updatedProduct = constructUpdatedProduct(existingProduct, name, description, price, enabled);
+        ProductDto updatedProduct = constructUpdatedProduct(existingProduct, name, description, price, enabled, preferredTerminalId);
 
         updateProductOptions(productId, productOptions);
 
@@ -124,7 +124,7 @@ public class ProductService {
         }
     }
 
-    private ProductDto constructUpdatedProduct(ProductDto existingProduct, String name, String description, BigDecimal price, Boolean enabled) {
+    private ProductDto constructUpdatedProduct(ProductDto existingProduct, String name, String description, BigDecimal price, Boolean enabled, String preferredTerminalId) {
         return new ProductDto(
                 existingProduct.getProductId(),
                 existingProduct.getCategoryId(),
@@ -132,6 +132,7 @@ public class ProductService {
                 description != null ? description : existingProduct.getDescription(),
                 price != null ? price : existingProduct.getPrice(),
                 enabled != null ? enabled : existingProduct.isEnabled(),
+                preferredTerminalId !=null ? preferredTerminalId : existingProduct.getPreferredTerminalId(),
                 null
         );
     }

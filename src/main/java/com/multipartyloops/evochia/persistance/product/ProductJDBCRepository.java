@@ -38,7 +38,8 @@ public class ProductJDBCRepository implements ProductRepository<ProductDto> {
                     product.getName(),
                     product.getDescription(),
                     product.getPrice(),
-                    product.isEnabled()
+                    product.isEnabled(),
+                    uuidPersistenceTransformer.fromString(product.getPreferredTerminalId())
             );
         } catch (DataIntegrityViolationException e) {
             throw new IllegalArgumentException("Category id is not matching an existing category");
@@ -136,6 +137,7 @@ public class ProductJDBCRepository implements ProductRepository<ProductDto> {
                 resultSet.getString("description"),
                 resultSet.getBigDecimal("price"),
                 resultSet.getBoolean("enabled"),
+                uuidPersistenceTransformer.getUUIDFromBytes(resultSet.getBytes("preferred_terminal_id")),
                 null
         );
     }

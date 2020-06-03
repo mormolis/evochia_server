@@ -56,6 +56,7 @@ public class ProductController {
                 body.getDescription(),
                 body.getPrice(),
                 body.isEnabled(),
+                body.getPreferredTerminalId(),
                 body.getProductOptions()
         );
 

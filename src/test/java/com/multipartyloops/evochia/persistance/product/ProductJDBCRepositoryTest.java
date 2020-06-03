@@ -3,6 +3,7 @@ package com.multipartyloops.evochia.persistance.product;
 import com.multipartyloops.evochia.core.product.entities.ProductCategoryDto;
 import com.multipartyloops.evochia.core.product.entities.ProductDto;
 import com.multipartyloops.evochia.core.product.entities.ProductOptionDto;
+import com.multipartyloops.evochia.core.terminal.dto.TerminalDto;
 import com.multipartyloops.evochia.persistance.product.option.ProductOptionRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -40,7 +41,8 @@ class ProductJDBCRepositoryTest extends ProductJDBCTest {
     @Test
     void insertProductPopulatesTheProductOptions() {
         ProductCategoryDto productCategoryDto = insertACategory();
-        ProductDto productToInsert = new ProductDto(UUID.randomUUID().toString(), productCategoryDto.getProductCategoryId(), "aName", "aDescription", new BigDecimal("3.99"), true, List.of(new ProductOptionDto(), new ProductOptionDto()));
+        TerminalDto terminalDto = insertATerminal();
+        ProductDto productToInsert = new ProductDto(UUID.randomUUID().toString(), productCategoryDto.getProductCategoryId(), "aName", "aDescription", new BigDecimal("3.99"), true, terminalDto.getTerminalId(), List.of(new ProductOptionDto(), new ProductOptionDto()));
 
         productJDBCRepository.insertProduct(productToInsert);
 
@@ -53,7 +55,8 @@ class ProductJDBCRepositoryTest extends ProductJDBCTest {
     @Test
     void canGetProductById() {
         ProductCategoryDto productCategoryDto = insertACategory();
-        ProductDto productToInsert = new ProductDto(UUID.randomUUID().toString(), productCategoryDto.getProductCategoryId(), "aName", "aDescription", new BigDecimal("3.99"), true, Collections.EMPTY_LIST);
+        TerminalDto terminalDto = insertATerminal();
+        ProductDto productToInsert = new ProductDto(UUID.randomUUID().toString(), productCategoryDto.getProductCategoryId(), "aName", "aDescription", new BigDecimal("3.99"), true, terminalDto.getTerminalId(), Collections.EMPTY_LIST);
         productJDBCRepository.insertProduct(productToInsert);
 
         Optional<ProductDto> productById = productJDBCRepository.getProductById(productToInsert.getProductId());
@@ -64,7 +67,8 @@ class ProductJDBCRepositoryTest extends ProductJDBCTest {
     @Test
     void canDeleteAProductById() {
         ProductCategoryDto productCategoryDto = insertACategory();
-        ProductDto productToInsert = new ProductDto(UUID.randomUUID().toString(), productCategoryDto.getProductCategoryId(), "aName", "aDescription", new BigDecimal("3.99"), true, Collections.EMPTY_LIST);
+        TerminalDto terminalDto = insertATerminal();
+        ProductDto productToInsert = new ProductDto(UUID.randomUUID().toString(), productCategoryDto.getProductCategoryId(), "aName", "aDescription", new BigDecimal("3.99"), true, terminalDto.getTerminalId(), Collections.EMPTY_LIST);
         productJDBCRepository.insertProduct(productToInsert);
 
         productJDBCRepository.deleteProduct(productToInsert.getProductId());
@@ -77,7 +81,8 @@ class ProductJDBCRepositoryTest extends ProductJDBCTest {
     @Test
     void canGetAllProducts() {
         ProductCategoryDto productCategoryDto = insertACategory();
-        List<ProductDto> productDtos = insertAFewProductsUnderACategory(productCategoryDto.getProductCategoryId(), true);
+        TerminalDto terminalDto = insertATerminal();
+        List<ProductDto> productDtos = insertAFewProductsUnderACategory(productCategoryDto.getProductCategoryId(), true, terminalDto.getTerminalId());
 
         List<ProductDto> allProducts = productJDBCRepository.getAllProducts();
 
@@ -85,11 +90,12 @@ class ProductJDBCRepositoryTest extends ProductJDBCTest {
     }
 
     @Test
-    void canGetAllProductsByCategory(){
+    void canGetAllProductsByCategory() {
         ProductCategoryDto productCategoryOne = insertACategory();
         ProductCategoryDto productCategoryTwo = insertACategory();
-        List<ProductDto> productsUnderCategoryOne = insertAFewProductsUnderACategory(productCategoryOne.getProductCategoryId(), true);
-        insertAFewProductsUnderACategory(productCategoryTwo.getProductCategoryId(), true);
+        TerminalDto terminalDto = insertATerminal();
+        List<ProductDto> productsUnderCategoryOne = insertAFewProductsUnderACategory(productCategoryOne.getProductCategoryId(), true, terminalDto.getTerminalId());
+        insertAFewProductsUnderACategory(productCategoryTwo.getProductCategoryId(), true, terminalDto.getTerminalId());
 
         List<ProductDto> allProducts = productJDBCRepository.getProductsByCategory(productCategoryOne.getProductCategoryId());
 
@@ -97,10 +103,11 @@ class ProductJDBCRepositoryTest extends ProductJDBCTest {
     }
 
     @Test
-    void canGetAllEnabledProductsByCategory(){
+    void canGetAllEnabledProductsByCategory() {
         ProductCategoryDto productCategoryOne = insertACategory();
-        List<ProductDto> enabledProducts = insertAFewProductsUnderACategory(productCategoryOne.getProductCategoryId(), true);
-        List<ProductDto> notEnabledProducts = insertAFewProductsUnderACategory(productCategoryOne.getProductCategoryId(), false);
+        TerminalDto terminalDto = insertATerminal();
+        List<ProductDto> enabledProducts = insertAFewProductsUnderACategory(productCategoryOne.getProductCategoryId(), true, terminalDto.getTerminalId());
+        List<ProductDto> notEnabledProducts = insertAFewProductsUnderACategory(productCategoryOne.getProductCategoryId(), false, terminalDto.getTerminalId());
 
         List<ProductDto> allProducts = productJDBCRepository.getEnabledProductsByCategory(productCategoryOne.getProductCategoryId());
 
@@ -108,11 +115,12 @@ class ProductJDBCRepositoryTest extends ProductJDBCTest {
     }
 
     @Test
-    void canUpdateAProduct(){
+    void canUpdateAProduct() {
         ProductCategoryDto productCategoryOne = insertACategory();
-        List<ProductDto> products = insertAFewProductsUnderACategory(productCategoryOne.getProductCategoryId(), true);
+        TerminalDto terminalDto = insertATerminal();
+        List<ProductDto> products = insertAFewProductsUnderACategory(productCategoryOne.getProductCategoryId(), true, terminalDto.getTerminalId());
         ProductDto productToUpdate = products.get(0);
-        ProductDto updated = new ProductDto(productToUpdate.getProductId(),productToUpdate.getCategoryId(),"anUpdatedName","anUpdatedDescription", BigDecimal.valueOf(1.11),false, productToUpdate.getProductOptions());
+        ProductDto updated = new ProductDto(productToUpdate.getProductId(), productToUpdate.getCategoryId(), "anUpdatedName", "anUpdatedDescription", BigDecimal.valueOf(1.11), false, terminalDto.getTerminalId(), productToUpdate.getProductOptions());
 
         productJDBCRepository.updateProduct(updated);
 
@@ -121,10 +129,12 @@ class ProductJDBCRepositoryTest extends ProductJDBCTest {
     }
 
     @Test
-    void aCategoryOfAProductCanBeUpdated(){
+    void aCategoryOfAProductCanBeUpdated() {
         ProductCategoryDto from = insertACategory();
         ProductCategoryDto to = insertACategory();
-        List<ProductDto> products = insertAFewProductsUnderACategory(from.getProductCategoryId(), true);
+        TerminalDto terminalDto = insertATerminal();
+
+        List<ProductDto> products = insertAFewProductsUnderACategory(from.getProductCategoryId(), true, terminalDto.getTerminalId());
 
         ProductDto productToUpdate = products.get(0);
 
@@ -134,20 +144,21 @@ class ProductJDBCRepositoryTest extends ProductJDBCTest {
     }
 
     @Test
-    void aCategoryOfAProductCanNotBeUpdatedWhenNewCategoryDoesNotExist(){
+    void aCategoryOfAProductCanNotBeUpdatedWhenNewCategoryDoesNotExist() {
         ProductCategoryDto from = insertACategory();
-        List<ProductDto> products = insertAFewProductsUnderACategory(from.getProductCategoryId(), true);
+        TerminalDto terminalDto = insertATerminal();
+        List<ProductDto> products = insertAFewProductsUnderACategory(from.getProductCategoryId(), true, terminalDto.getTerminalId());
 
         ProductDto productToUpdate = products.get(0);
 
-        assertThatThrownBy(()->productJDBCRepository.updateProductsCategory(productToUpdate.getProductId(), UUID.randomUUID().toString()))
+        assertThatThrownBy(() -> productJDBCRepository.updateProductsCategory(productToUpdate.getProductId(), UUID.randomUUID().toString()))
                 .isInstanceOf(DataIntegrityViolationException.class);
     }
 
-    private List<ProductDto> insertAFewProductsUnderACategory(String categoryId, Boolean isEnabled){
+    private List<ProductDto> insertAFewProductsUnderACategory(String categoryId, Boolean isEnabled, String terminalId) {
 
-        return IntStream.range(0,5)
-                .mapToObj(_i->insertAProduct(categoryId, isEnabled))
+        return IntStream.range(0, 5)
+                .mapToObj(_i -> insertAProduct(categoryId, isEnabled, terminalId))
                 .collect(Collectors.toList());
     }
 
