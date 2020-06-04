@@ -7,6 +7,8 @@ import com.multipartyloops.evochia.configuration.exceptions.UnauthorizedUserExce
 import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsException;
 import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsFormatException;
 import com.multipartyloops.evochia.core.product.exceptions.*;
+import com.multipartyloops.evochia.core.terminal.exceptions.TerminalNotFoundException;
+import com.multipartyloops.evochia.core.terminal.exceptions.ValueCannotBeNullOrEmptyException;
 import com.multipartyloops.evochia.entrypoints.exceptions.dtos.ErrorResponseBody;
 import com.multipartyloops.evochia.persistance.exceptions.RowNotFoundException;
 import org.springframework.http.HttpHeaders;
@@ -39,7 +41,8 @@ public class EvochiaExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(value = {RowNotFoundException.class, NumberFormatException.class,
             ProductCategoryCouldNotBeFoundException.class,
             ProductNotFoundException.class,
-            CategoryDoesNotExistException.class})
+            CategoryDoesNotExistException.class,
+            TerminalNotFoundException.class})
     protected ResponseEntity<Object> valueNotFound(RuntimeException ex, WebRequest request) {
         String message = ex.getMessage();
         if (ex instanceof NumberFormatException) {
@@ -66,7 +69,8 @@ public class EvochiaExceptionHandler extends ResponseEntityExceptionHandler {
             AccessTokenNotProvidedException.class,
             InvalidCategoryNameException.class,
             InvalidProductCategoryId.class,
-            MandatoryFieldNotPassedException.class
+            MandatoryFieldNotPassedException.class,
+            ValueCannotBeNullOrEmptyException.class
     })
     protected ResponseEntity<Object> badRequest(RuntimeException ex, WebRequest request) {
         Object bodyOfResponse = new ErrorResponseBody(ex.getMessage());

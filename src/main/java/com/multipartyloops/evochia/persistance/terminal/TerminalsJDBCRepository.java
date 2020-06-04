@@ -3,6 +3,7 @@ package com.multipartyloops.evochia.persistance.terminal;
 import com.multipartyloops.evochia.core.terminal.dto.TerminalDto;
 import com.multipartyloops.evochia.persistance.UuidPersistenceTransformer;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -11,6 +12,7 @@ import java.util.Optional;
 
 import static com.multipartyloops.evochia.persistance.terminal.TerminalsSQLStatements.*;
 
+@Repository
 public class TerminalsJDBCRepository implements TerminalsRepository<TerminalDto> {
 
     private final JdbcTemplate jdbcTemplate;
