@@ -38,6 +38,7 @@ class ProductServiceTest {
     public static final String A_DESCRIPTION = "a description";
     public static final String A_PRODUCT_VARIATION = "aProductVariation";
     public static final String PREFERRED_TERMINAL_ID = UUID.randomUUID().toString();
+    public static final String A_TERMINAL_ID = UUID.randomUUID().toString();
 
     @Mock
     private ProductRepository<ProductDto> productRepositoryMock;
@@ -275,6 +276,30 @@ class ProductServiceTest {
         assertThatThrownBy(() -> productService.changeCategoryOfAProduct(UUID.randomUUID().toString(), "nonUuid"))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("Category Id does not exist");
+    }
+
+    @Test
+    void preferredTerminalCanChange() {
+
+        productService.changePreferredTerminalOfAProduct(A_PRODUCT_ID, A_TERMINAL_ID);
+
+        then(productRepositoryMock).should().updatePreferredTerminal(A_PRODUCT_ID, A_TERMINAL_ID);
+    }
+
+    @Test
+    void changePreferredTerminalWillThrowExceptionWhenProductIdIsNotUUID() {
+
+        assertThatThrownBy(() -> productService.changePreferredTerminalOfAProduct("nonUuid", UUID.randomUUID().toString()))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Product not found");
+    }
+
+    @Test
+    void changePreferredTerminalWillThrowExceptionWhenTerminalIdIsNotUUID() {
+
+        assertThatThrownBy(() -> productService.changePreferredTerminalOfAProduct(UUID.randomUUID().toString(), "nonUuid"))
+                .isInstanceOf(IllegalArgumentException.class)
+                .hasMessage("Terminal Id does not exist");
     }
 
     private List<ProductOptionDto> aListOfProductOptions() {

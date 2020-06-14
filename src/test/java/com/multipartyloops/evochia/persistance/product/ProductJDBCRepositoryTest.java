@@ -144,6 +144,22 @@ class ProductJDBCRepositoryTest extends ProductJDBCTest {
     }
 
     @Test
+    void aPreferredTerminalOfAProductCanBeUpdated() {
+        ProductCategoryDto from = insertACategory();
+        ProductCategoryDto to = insertACategory();
+        TerminalDto terminalDto = insertATerminal();
+        TerminalDto anotherTerminal = insertATerminal();
+
+        List<ProductDto> products = insertAFewProductsUnderACategory(from.getProductCategoryId(), true, terminalDto.getTerminalId());
+
+        ProductDto productToUpdate = products.get(0);
+
+        productJDBCRepository.updatePreferredTerminal(productToUpdate.getProductId(), anotherTerminal.getTerminalId());
+
+        assertThat(productJDBCRepository.getProductById(productToUpdate.getProductId()).get().getPreferredTerminalId()).isEqualTo(anotherTerminal.getTerminalId());
+    }
+
+    @Test
     void aCategoryOfAProductCanNotBeUpdatedWhenNewCategoryDoesNotExist() {
         ProductCategoryDto from = insertACategory();
         TerminalDto terminalDto = insertATerminal();

@@ -21,4 +21,6 @@ public interface ProductRepository<T> {
 
     void updateProductsCategory(String productId, String newCategoryId);
 
+    void updatePreferredTerminal(String productId, String newTerminalId);
+
 }

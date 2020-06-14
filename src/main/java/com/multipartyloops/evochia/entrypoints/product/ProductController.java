@@ -3,6 +3,7 @@ package com.multipartyloops.evochia.entrypoints.product;
 import com.multipartyloops.evochia.core.product.ProductService;
 import com.multipartyloops.evochia.core.product.entities.ProductDto;
 import com.multipartyloops.evochia.entrypoints.product.entities.ProductCategoryChangeRequestBody;
+import com.multipartyloops.evochia.entrypoints.product.entities.ProductPreferredTerminalRequestBody;
 import com.multipartyloops.evochia.entrypoints.product.entities.ProductUpdateRequestBody;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -76,8 +77,14 @@ public class ProductController {
     }
 
     @RequestMapping(value = "/product/category/update", method = RequestMethod.PATCH)
-    public ResponseEntity<Void> getEnabledProductsByCategoryId(@RequestHeader Map<String, String> headers, @RequestBody ProductCategoryChangeRequestBody body) {
+    public ResponseEntity<Void> updateCategoryId(@RequestHeader Map<String, String> headers, @RequestBody ProductCategoryChangeRequestBody body) {
         productService.changeCategoryOfAProduct(body.getProductId(), body.getDestinationCategoryId());
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
+
+    @RequestMapping(value = "/product/terminal/update", method = RequestMethod.PATCH)
+    public ResponseEntity<Void> updatePreferredTerminalId(@RequestHeader Map<String, String> headers, @RequestBody ProductPreferredTerminalRequestBody body) {
+        productService.changePreferredTerminalOfAProduct (body.getProductId(), body.getDestinationPreferredTerminalId());
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 

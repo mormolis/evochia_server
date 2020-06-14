@@ -129,6 +129,15 @@ public class ProductJDBCRepository implements ProductRepository<ProductDto> {
         );
     }
 
+    @Override
+    public void updatePreferredTerminal(String productId, String newTerminalId) {
+
+        jdbcTemplate.update(PRODUCT_PREFERRED_TERMINAL_UPDATE,
+                uuidPersistenceTransformer.fromString(newTerminalId),
+                uuidPersistenceTransformer.fromString(productId)
+        );
+    }
+
     private ProductDto parseProductWithoutOptions(ResultSet resultSet, int _i) throws SQLException {
         return new ProductDto(
                 uuidPersistenceTransformer.getUUIDFromBytes(resultSet.getBytes("product_id")),

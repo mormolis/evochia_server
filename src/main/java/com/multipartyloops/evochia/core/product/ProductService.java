@@ -100,6 +100,17 @@ public class ProductService {
         }
     }
 
+    public void changePreferredTerminalOfAProduct(String productId, String toTerminalId) {
+        UUIDFormatChecker.confirmOrThrow(productId, new IllegalArgumentException("Product not found"));
+        UUIDFormatChecker.confirmOrThrow(toTerminalId, new IllegalArgumentException("Terminal Id does not exist"));
+
+        try {
+            productRepository.updatePreferredTerminal(productId, toTerminalId);
+        }catch (DataIntegrityViolationException e) {
+            throw new IllegalArgumentException("Product or/and terminal do not exist");
+        }
+    }
+
     private void updateProductOptions(String productId, List<ProductOptionDto> productOptions) {
         if (productOptions != null) {
             productOptionRepository.deleteAllOptionsOfAProduct(productId);

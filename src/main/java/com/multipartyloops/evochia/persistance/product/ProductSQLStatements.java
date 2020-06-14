@@ -10,6 +10,7 @@ public final class ProductSQLStatements {
     public static final String PRODUCT_SELECT_BY_PRODUCT_ID = "SELECT * FROM product WHERE product_id=?";
     public static final String PRODUCT_UPDATE = "UPDATE product SET name=?, description=?, price=?, enabled=? WHERE product_id=?";
     public static final String PRODUCT_CATEGORY_UPDATE = "UPDATE product SET category_id=? WHERE product_id=?";
+    public static final String PRODUCT_PREFERRED_TERMINAL_UPDATE = "UPDATE product SET preferred_terminal_id=? WHERE product_id=?";
 
     private ProductSQLStatements() {
     }
