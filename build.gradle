@@ -19,35 +19,31 @@ configurations {
 repositories {
 	mavenCentral()
 }
+
 sourceSets {
-	main {}
-	integrationTest {}
+	integrationTest {
+		compileClasspath += sourceSets.test.runtimeClasspath
+		runtimeClasspath += sourceSets.test.runtimeClasspath
+
+		java {
+			srcDirs("src/integrationTest/java")
+			compileClasspath += main.output
+			runtimeClasspath += main.output
+		}
+	}
 }
 
 dependencies {
-	compile 'org.springframework.boot:spring-boot-starter-web'
-	compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.3.1.RELEASE'
-	compile 'org.flywaydb:flyway-core'
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.3.1.RELEASE'
+	implementation 'org.flywaydb:flyway-core'
 	compileOnly 'org.projectlombok:lombok'
-	compile 'org.springframework.boot:spring-boot-starter-jdbc'
+	implementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	// https://mvnrepository.com/artifact/org.aspectj/aspectjweaver
-	compile group: 'org.aspectj', name: 'aspectjweaver', version: '1.9.5'
+	implementation group: 'org.aspectj', name: 'aspectjweaver', version: '1.9.5'
 	runtimeOnly 'mysql:mysql-connector-java'
 	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation('org.springframework.boot:spring-boot-starter-test') {
-		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-	}
-
-	// integration tests
-	integrationTestCompile sourceSets.main.output
-	integrationTestCompile sourceSets.main.allSource
-	integrationTestRuntimeClasspath sourceSets.main.output
-	integrationTestImplementation 'org.springframework.boot:spring-boot-starter-web'
-	integrationTestImplementation 'org.flywaydb:flyway-core'
-	integrationTestImplementation 'org.springframework.boot:spring-boot-starter-jdbc'
-	integrationTestImplementation('org.springframework.boot:spring-boot-starter-test') {
-		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
-	}
+	testImplementation('org.springframework.boot:spring-boot-starter-test')
 }
 
 test {
@@ -59,6 +55,7 @@ flyway {
 	user = 'evochia_developer'
 	password = 'apassword'
 }
+
 
 task integrationTest(type: Test) {
 	group 'Verification'
