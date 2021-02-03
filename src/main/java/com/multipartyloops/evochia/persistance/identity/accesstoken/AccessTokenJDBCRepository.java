@@ -75,14 +75,17 @@ public class AccessTokenJDBCRepository implements AccessTokensRepository<AccessT
 
     private AccessTokenDto parseToken(ResultSet resultSet, int _rowNumber) throws SQLException {
 
-        return new AccessTokenDto(
-                uuidPersistenceTransformer.getUUIDFromBytes(resultSet.getBytes("token")),
-                resultSet.getTimestamp("token_expiry").toLocalDateTime(),
-                uuidPersistenceTransformer.getUUIDFromBytes(resultSet.getBytes("refresh_token")),
-                resultSet.getTimestamp("refresh_token_expiry").toLocalDateTime(),
-                uuidPersistenceTransformer.getUUIDFromBytes(resultSet.getBytes("user_id")),
-                uuidPersistenceTransformer.getUUIDFromBytes(resultSet.getBytes("client_id")),
-                resultSet.getString("roles")
-        );
+        if(resultSet.next()) {
+            return new AccessTokenDto(
+                    uuidPersistenceTransformer.getUUIDFromBytes(resultSet.getBytes("token")),
+                    resultSet.getTimestamp("token_expiry").toLocalDateTime(),
+                    uuidPersistenceTransformer.getUUIDFromBytes(resultSet.getBytes("refresh_token")),
+                    resultSet.getTimestamp("refresh_token_expiry").toLocalDateTime(),
+                    uuidPersistenceTransformer.getUUIDFromBytes(resultSet.getBytes("user_id")),
+                    uuidPersistenceTransformer.getUUIDFromBytes(resultSet.getBytes("client_id")),
+                    resultSet.getString("roles")
+            );
+        }
+        throw new RowNotFoundException("Access Token not found");
     }
 }
