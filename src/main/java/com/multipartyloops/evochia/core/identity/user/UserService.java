@@ -1,5 +1,6 @@
 package com.multipartyloops.evochia.core.identity.user;
 
+import com.multipartyloops.evochia.core.commons.Preconditions;
 import com.multipartyloops.evochia.core.identity.commons.PasswordService;
 import com.multipartyloops.evochia.core.identity.user.entities.Roles;
 import com.multipartyloops.evochia.core.identity.user.entities.UserDto;
@@ -47,8 +48,7 @@ public class UserService {
     }
 
     public void updateUser(UserDto newUser) {
-
-        checkUserIdIsPassed(newUser.getUserId());
+        Preconditions.throwWhenNullOrEmpty(newUser.getUserId(), new IllegalArgumentException("Cannot update user with no userId"));
 
         UserDto user = userRepository.getUserById(newUser.getUserId());
 
@@ -70,7 +70,6 @@ public class UserService {
 
 
     public List<UserDto> getAllUsersByRole(List<Roles> roles){
-
         return roles
                 .stream()
                 .map(userRepository::getAllUsersByRole)
@@ -80,7 +79,7 @@ public class UserService {
     }
 
     public void deactivateUser(String userId){
-        checkUserIdIsPassed(userId);
+        Preconditions.throwWhenNullOrEmpty(userId, new IllegalArgumentException("Cannot update user with no userId"));
 
         UserDto user = userRepository.getUserById(userId);
         user.setUsername(userId);
@@ -102,11 +101,6 @@ public class UserService {
         );
     }
 
-    private void checkUserIdIsPassed(String userIdToUpdate) {
-        if(userIdToUpdate == null || "".equals(userIdToUpdate)) {
-            throw new IllegalArgumentException("Cannot update user with no userId");
-        }
-    }
 
     private UserDto constructUpdatedUser(UserDto newUser, UserDto oldUser) {
         return new UserDto(

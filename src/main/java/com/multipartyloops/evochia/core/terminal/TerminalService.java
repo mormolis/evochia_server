@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
-import static com.multipartyloops.evochia.core.commons.StringValidator.throwWhenNullOrEmpty;
+import static com.multipartyloops.evochia.core.commons.Preconditions.throwWhenNullOrEmpty;
 import static com.multipartyloops.evochia.core.commons.UUIDFormatChecker.confirmOrThrow;
 
 @Service

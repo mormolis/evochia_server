@@ -25,10 +25,6 @@ sourceSets {
 }
 
 dependencies {
-	integrationTestCompile sourceSets.main.output
-}
-
-dependencies {
 	compile 'org.springframework.boot:spring-boot-starter-web'
 	compile group: 'org.springframework.security', name: 'spring-security-crypto', version: '5.3.1.RELEASE'
 	compile 'org.flywaydb:flyway-core'
@@ -41,6 +37,14 @@ dependencies {
 	testImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
+
+	// integration tests
+	integrationTestCompile sourceSets.main.output
+	integrationTestCompile sourceSets.main.allSource
+	integrationTestRuntimeClasspath sourceSets.main.output
+	integrationTestImplementation 'org.springframework.boot:spring-boot-starter-web'
+	integrationTestImplementation 'org.flywaydb:flyway-core'
+	integrationTestImplementation 'org.springframework.boot:spring-boot-starter-jdbc'
 	integrationTestImplementation('org.springframework.boot:spring-boot-starter-test') {
 		exclude group: 'org.junit.vintage', module: 'junit-vintage-engine'
 	}
@@ -54,4 +58,26 @@ flyway {
 	url = 'jdbc:mysql://localhost:3306/evochia_dev'
 	user = 'evochia_developer'
 	password = 'apassword'
+}
+
+task integrationTest(type: Test) {
+	group 'Verification'
+	useJUnitPlatform()
+	description = "Run integration tests (located in src/integrationTests/...)."
+	testClassesDirs = sourceSets.integrationTest.output.classesDirs
+	classpath = sourceSets.integrationTest.runtimeClasspath
+
+	testLogging {
+		events "passed", "skipped", "failed"
+		info {
+			showStackTraces = true
+			showCauses = true
+			showExceptions = true
+			exceptionFormat = "full"
+			showStandardStreams = true
+		}
+	}
+
+	// Always run integration tests
+	outputs.upToDateWhen { false }
 }

@@ -1,6 +1,6 @@
 package com.multipartyloops.evochia.core.commons;
 
-public class StringValidator {
+public class Preconditions {
 
     public static void throwWhenNull(String string, RuntimeException exception) {
         if(string == null){
