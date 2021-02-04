@@ -2,8 +2,8 @@ package com.multipartyloops.evochia.core.commons;
 
 public class Preconditions {
 
-    public static void throwWhenNull(String string, RuntimeException exception) {
-        if(string == null){
+    public static void throwWhenNull(Object object, RuntimeException exception) {
+        if(object == null){
             throw exception;
         }
     }

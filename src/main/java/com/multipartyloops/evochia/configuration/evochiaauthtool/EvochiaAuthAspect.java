@@ -34,7 +34,7 @@ public class EvochiaAuthAspect {
     @Before("@annotation(authRequirement)")
     public void checkUserValidation(JoinPoint joinPoint, AuthRequirement authRequirement) {
 
-        String token = getAuthorizationTokenFromArguments(joinPoint.getArgs());
+        String token = getAuthenticationTokenFromArguments(joinPoint.getArgs());
         ValidateTokenResponseDto validateTokenResponseDto = validateToken(token);
 
         checkAccessTokensValidity(validateTokenResponseDto);
@@ -64,13 +64,13 @@ public class EvochiaAuthAspect {
     }
 
     @SuppressWarnings("unchecked")
-    private String getAuthorizationTokenFromArguments(Object[] args) {
+    private String getAuthenticationTokenFromArguments(Object[] args) {
         String authorizationHeader = "";
         for (Object arg : args) {
             if (arg instanceof Map) {
                 Map<String, String> headers = (Map<String, String>) arg;
                 authorizationHeader = headers.keySet().stream()
-                        .filter(key -> key.toLowerCase().equals("authorization"))
+                        .filter(key -> key.equalsIgnoreCase("authorization"))
                         .findFirst()
                         .map(headers::get)
                         .orElseThrow(() -> new AccessTokenNotProvidedException("Access token has not been provided"));

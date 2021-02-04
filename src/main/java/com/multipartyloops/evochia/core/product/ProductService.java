@@ -1,5 +1,6 @@
 package com.multipartyloops.evochia.core.product;
 
+import com.multipartyloops.evochia.core.commons.Preconditions;
 import com.multipartyloops.evochia.core.commons.UUIDFormatChecker;
 import com.multipartyloops.evochia.core.product.entities.ProductDto;
 import com.multipartyloops.evochia.core.product.entities.ProductOptionDto;
@@ -28,8 +29,7 @@ public class ProductService {
     }
 
     public ProductDto addProduct(ProductDto productDto) {
-
-        checkProductsMandatoryFieldsHaveBeenPassed(productDto);
+        preconditions(productDto);
 
         final String productId = UUID.randomUUID().toString();
         productDto.setProductId(productId);
@@ -41,25 +41,22 @@ public class ProductService {
     }
 
     public void deleteProduct(String productId) {
-
         UUIDFormatChecker.confirmOrThrow(productId, new ProductNotFoundException("Product not found"));
+
         productOptionRepository.deleteAllOptionsOfAProduct(productId);
         productRepository.deleteProduct(productId);
     }
 
     public List<ProductDto> getAllProductsByCategory(String categoryId) {
-
         UUIDFormatChecker.confirmOrThrow(categoryId, new CategoryDoesNotExistException("Category Id does not exist"));
         return productRepository.getProductsByCategory(categoryId);
     }
 
     public List<ProductDto> getAllProducts() {
-
         return productRepository.getAllProducts();
     }
 
     public List<ProductDto> getEnabledProductsByCategory(String categoryId) {
-
         try {
             return productRepository.getEnabledProductsByCategory(categoryId);
         } catch (IllegalArgumentException e) {
@@ -68,7 +65,6 @@ public class ProductService {
     }
 
     public ProductDto getProductById(String productId) {
-
         UUIDFormatChecker.confirmOrThrow(productId, new ProductNotFoundException("Product not found"));
 
         return productRepository.getProductById(productId).orElseThrow(
@@ -77,8 +73,7 @@ public class ProductService {
     }
 
     public void updateProduct(String productId, String name, String description, BigDecimal price, Boolean enabled, String preferredTerminalId, List<ProductOptionDto> productOptions) {
-
-        checkProductIdIsPassed(productId);
+        Preconditions.throwWhenNullOrEmpty(productId, new MandatoryFieldNotPassedException("Cannot update product without productId"));
         UUIDFormatChecker.confirmOrThrow(productId, new ProductNotFoundException("Product not found"));
 
         ProductDto existingProduct = getProductById(productId);
@@ -122,17 +117,10 @@ public class ProductService {
         }
     }
 
-    private void checkProductsMandatoryFieldsHaveBeenPassed(ProductDto productDto) {
-        if (productDto.getCategoryId() == null || "".equals(productDto.getCategoryId())) {
-            throw new MandatoryFieldNotPassedException("Product needs to have a category");
-        }
-        if (productDto.getName() == null || "".equals(productDto.getName())) {
-            throw new MandatoryFieldNotPassedException("Product needs to have a name");
-        }
-
-        if (productDto.getPrice() == null) {
-            throw new MandatoryFieldNotPassedException("Product needs to have a price");
-        }
+    private void preconditions(ProductDto productDto) {
+        Preconditions.throwWhenNullOrEmpty(productDto.getCategoryId(), new MandatoryFieldNotPassedException("Product needs to have a category"));
+        Preconditions.throwWhenNullOrEmpty(productDto.getName(), new MandatoryFieldNotPassedException("Product needs to have a name"));
+        Preconditions.throwWhenNull(productDto.getPrice(), new MandatoryFieldNotPassedException("Product needs to have a price"));
     }
 
     private ProductDto constructUpdatedProduct(ProductDto existingProduct, String name, String description, BigDecimal price, Boolean enabled, String preferredTerminalId) {
@@ -146,12 +134,6 @@ public class ProductService {
                 preferredTerminalId !=null ? preferredTerminalId : existingProduct.getPreferredTerminalId(),
                 null
         );
-    }
-
-    private void checkProductIdIsPassed(String productId) {
-        if (productId == null || "".equals(productId)) {
-            throw new MandatoryFieldNotPassedException("Cannot update product without productId");
-        }
     }
 
     private void populateProductOptionsIdValues(ProductDto productDto, String productId) {
