@@ -37,7 +37,6 @@ public class UserJDBCRepository implements UserRepository<UserDto> {
 
     @Override
     public UserDto getUserByUsername(String username) {
-
         UserDto user = getUserByUsernameWithoutRole(username);
         Object userIdInBytes = uuidPersistenceTransformer.fromString(user.getUserId());
         List<Roles> roles = getRolesByUserId(userIdInBytes);
@@ -47,7 +46,6 @@ public class UserJDBCRepository implements UserRepository<UserDto> {
 
     @Override
     public void storeUser(UserDto user) {
-
         Object binaryUserId = uuidPersistenceTransformer.fromString(user.getUserId());
 
         jdbcTemplate.update(USERS_INSERTION, binaryUserId, user.getUsername(), user.getPassword(), user.getName(), user.getTelephone());
@@ -69,7 +67,6 @@ public class UserJDBCRepository implements UserRepository<UserDto> {
 
     @Override
     public List<UserDto> getAllUsers() {
-
         List<UserDto> allUsers = jdbcTemplate.query(USERS_SELECT_STAR, this::parseUser);
         populateUserWithTheirRoles(allUsers);
         return allUsers;
@@ -78,7 +75,6 @@ public class UserJDBCRepository implements UserRepository<UserDto> {
 
     @Override
     public List<UserDto> getAllUsersByRole(Roles role) {
-
         List<byte[]> userIds = jdbcTemplate.query(ROLES_SELECT_USER_ID_BY_ROLE, this::getUserId, role.name());
         List<UserDto> users = new ArrayList<>();
         // think about returning the users without the roles to make it faster

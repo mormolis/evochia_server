@@ -56,7 +56,7 @@ public class ClientCredentialsJDBCRepository implements ClientCredentialsReposit
         jdbcTemplate.update(CLIENT_CREDENTIALS_DELETE_BY_CLIENT_ID, binaryClientId);
     }
 
-    private ClientCredentialsDto parseClientCredentials(ResultSet resultSet, int _rowNumber) throws SQLException {
+    ClientCredentialsDto parseClientCredentials(ResultSet resultSet, int _rowNumber) throws SQLException {
         return new ClientCredentialsDto(
                 uuidPersistenceTransformer.getUUIDFromBytes(resultSet.getBytes("client_id")),
                 resultSet.getString("secret"),
