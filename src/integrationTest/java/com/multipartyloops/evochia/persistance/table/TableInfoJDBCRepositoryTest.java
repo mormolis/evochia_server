@@ -67,4 +67,24 @@ public class TableInfoJDBCRepositoryTest extends TableJDBCTest {
 
         assertThat(allTables).asList().containsExactlyInAnyOrder(table, anotherTable);
     }
+
+    @Test
+    void updatesTableStatusFromEnabledToDisabled(){
+        final var tableGroup = super.insertAGroup("aName", true);
+        final var table = insertATable("an-alias", tableGroup.getGroupId(), true);
+
+        tableInfoJDBCRepository.disableTable(table.getTableId());
+
+        assertThat(tableInfoJDBCRepository.getTableById(table.getTableId()).get().getEnabled()).isFalse();
+    }
+
+    @Test
+    void updatesTableStatusFromDisabledToEnabled(){
+        final var tableGroup = super.insertAGroup("aName", true);
+        final var table = insertATable("an-alias", tableGroup.getGroupId(), false);
+
+        tableInfoJDBCRepository.enableTable(table.getTableId());
+
+        assertThat(tableInfoJDBCRepository.getTableById(table.getTableId()).get().getEnabled()).isTrue();
+    }
 }

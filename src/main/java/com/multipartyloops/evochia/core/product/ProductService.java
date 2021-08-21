@@ -1,10 +1,10 @@
 package com.multipartyloops.evochia.core.product;
 
 import com.multipartyloops.evochia.core.commons.UUIDFormatChecker;
+import com.multipartyloops.evochia.core.commons.exceptions.ValueCannotBeNullOrEmptyException;
 import com.multipartyloops.evochia.core.product.dto.ProductDto;
 import com.multipartyloops.evochia.core.product.dto.ProductOptionDto;
 import com.multipartyloops.evochia.core.product.exceptions.CategoryDoesNotExistException;
-import com.multipartyloops.evochia.core.commons.exceptions.MandatoryFieldNotPassedException;
 import com.multipartyloops.evochia.core.product.exceptions.ProductNotFoundException;
 import com.multipartyloops.evochia.persistance.product.ProductRepository;
 import com.multipartyloops.evochia.persistance.product.option.ProductOptionRepository;
@@ -75,7 +75,7 @@ public class ProductService {
     }
 
     public void updateProduct(String productId, String name, String description, BigDecimal price, Boolean enabled, String preferredTerminalId, List<ProductOptionDto> productOptions) {
-        throwWhenNullOrEmpty(productId, new MandatoryFieldNotPassedException("Cannot update product without productId"));
+        throwWhenNullOrEmpty(productId, new ValueCannotBeNullOrEmptyException("Cannot update product without productId"));
         UUIDFormatChecker.confirmOrThrow(productId, new ProductNotFoundException("Product not found"));
 
         ProductDto existingProduct = getProductById(productId);
@@ -92,7 +92,7 @@ public class ProductService {
 
         try {
             productRepository.updateProductsCategory(productId, toCategoryId);
-        }catch (DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException e) {
             throw new IllegalArgumentException("Product or/and category do not exist");
         }
     }
@@ -103,7 +103,7 @@ public class ProductService {
 
         try {
             productRepository.updatePreferredTerminal(productId, toTerminalId);
-        }catch (DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException e) {
             throw new IllegalArgumentException("Product or/and terminal do not exist");
         }
     }
@@ -120,9 +120,9 @@ public class ProductService {
     }
 
     private void preconditions(ProductDto productDto) {
-        throwWhenNullOrEmpty(productDto.getCategoryId(), new MandatoryFieldNotPassedException("Product needs to have a category"));
-        throwWhenNullOrEmpty(productDto.getName(), new MandatoryFieldNotPassedException("Product needs to have a name"));
-        throwWhenNull(productDto.getPrice(), new MandatoryFieldNotPassedException("Product needs to have a price"));
+        throwWhenNullOrEmpty(productDto.getCategoryId(), new ValueCannotBeNullOrEmptyException("Product needs to have a category"));
+        throwWhenNullOrEmpty(productDto.getName(), new ValueCannotBeNullOrEmptyException("Product needs to have a name"));
+        throwWhenNull(productDto.getPrice(), new ValueCannotBeNullOrEmptyException("Product needs to have a price"));
     }
 
     private ProductDto constructUpdatedProduct(ProductDto existingProduct, String name, String description, BigDecimal price, Boolean enabled, String preferredTerminalId) {
@@ -133,7 +133,7 @@ public class ProductService {
                 description != null ? description : existingProduct.getDescription(),
                 price != null ? price : existingProduct.getPrice(),
                 enabled != null ? enabled : existingProduct.isEnabled(),
-                preferredTerminalId !=null ? preferredTerminalId : existingProduct.getPreferredTerminalId(),
+                preferredTerminalId != null ? preferredTerminalId : existingProduct.getPreferredTerminalId(),
                 null
         );
     }

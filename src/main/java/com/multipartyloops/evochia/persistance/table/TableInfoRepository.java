@@ -4,9 +4,14 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TableInfoRepository<T> {
+
     void insertTable(T table);
 
     void deleteTable(String tableId);
+
+    void disableTable(String tableId);
+
+    void enableTable(String tableId);
 
     List<T> getAllTables();
 

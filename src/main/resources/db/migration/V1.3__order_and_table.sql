@@ -8,7 +8,7 @@ CREATE TABLE table_grouping (
 
 CREATE TABLE table_info (
     table_id BINARY(16) NOT NULL,
-    table_alias VARCHAR(50) UNIQUE,
+    table_alias VARCHAR(50) UNIQUE NOT NULL,
     group_id BINARY(16) NOT NULL,
     enabled BOOLEAN DEFAULT true,
     PRIMARY KEY (table_id),

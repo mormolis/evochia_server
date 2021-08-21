@@ -2,7 +2,7 @@ package com.multipartyloops.evochia.core.terminal;
 
 import com.multipartyloops.evochia.core.terminal.dto.TerminalDto;
 import com.multipartyloops.evochia.core.terminal.exceptions.TerminalNotFoundException;
-import com.multipartyloops.evochia.core.terminal.exceptions.ValueCannotBeNullOrEmptyException;
+import com.multipartyloops.evochia.core.commons.exceptions.ValueCannotBeNullOrEmptyException;
 import com.multipartyloops.evochia.persistance.terminal.TerminalsRepository;
 import org.springframework.stereotype.Service;
 

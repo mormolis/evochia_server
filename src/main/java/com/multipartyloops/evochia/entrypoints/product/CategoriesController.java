@@ -2,9 +2,9 @@ package com.multipartyloops.evochia.entrypoints.product;
 
 import com.multipartyloops.evochia.core.product.category.ProductCategoryService;
 import com.multipartyloops.evochia.core.product.dto.ProductCategoryDto;
-import com.multipartyloops.evochia.entrypoints.product.entities.CreateProductCategoryRequestBody;
-import com.multipartyloops.evochia.entrypoints.product.entities.CreateProductCategoryResponse;
-import com.multipartyloops.evochia.entrypoints.product.entities.DeleteProductCategoryRequestBody;
+import com.multipartyloops.evochia.entrypoints.product.dtos.CreateProductCategoryRequestBody;
+import com.multipartyloops.evochia.entrypoints.product.dtos.CreateProductCategoryResponse;
+import com.multipartyloops.evochia.entrypoints.product.dtos.DeleteProductCategoryRequestBody;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

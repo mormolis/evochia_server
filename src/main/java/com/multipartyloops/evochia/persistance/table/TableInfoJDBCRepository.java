@@ -15,6 +15,7 @@ import static com.multipartyloops.evochia.persistance.table.TableInfoSQLStatemen
 import static com.multipartyloops.evochia.persistance.table.TableInfoSQLStatements.INSERT_TABLE;
 import static com.multipartyloops.evochia.persistance.table.TableInfoSQLStatements.SELECT_TABLE_BY_ALIAS;
 import static com.multipartyloops.evochia.persistance.table.TableInfoSQLStatements.SELECT_TABLE_BY_ID;
+import static com.multipartyloops.evochia.persistance.table.TableInfoSQLStatements.UPDATE_TABLE_ENABLED_STATUS;
 
 @Repository
 public class TableInfoJDBCRepository implements TableInfoRepository<TableInfoDto> {
@@ -45,6 +46,22 @@ public class TableInfoJDBCRepository implements TableInfoRepository<TableInfoDto
     }
 
     @Override
+    public void disableTable(String tableId) {
+        jdbcTemplate.update(UPDATE_TABLE_ENABLED_STATUS,
+                            false,
+                            uuidPersistenceTransformer.fromString(tableId)
+        );
+    }
+
+    @Override
+    public void enableTable(String tableId) {
+        jdbcTemplate.update(UPDATE_TABLE_ENABLED_STATUS,
+                            true,
+                            uuidPersistenceTransformer.fromString(tableId)
+        );
+    }
+
+    @Override
     public List<TableInfoDto> getAllTables() {
         return jdbcTemplate.query(GET_ALL_TABLES,
                                   this::parseTable);
@@ -52,9 +69,10 @@ public class TableInfoJDBCRepository implements TableInfoRepository<TableInfoDto
 
     @Override
     public Optional<TableInfoDto> getTableById(String tableId) {
+        Object tableIdInBytes = uuidPersistenceTransformer.fromString(tableId);
         List<TableInfoDto> list = jdbcTemplate.query(SELECT_TABLE_BY_ID,
                                                      this::parseTable,
-                                                     uuidPersistenceTransformer.fromString(tableId)
+                                                     tableIdInBytes
         );
 
         if (list.size() == 1) {

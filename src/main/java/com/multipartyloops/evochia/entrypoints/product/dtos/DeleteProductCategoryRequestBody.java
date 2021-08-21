@@ -1,4 +1,4 @@
-package com.multipartyloops.evochia.entrypoints.product.entities;
+package com.multipartyloops.evochia.entrypoints.product.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

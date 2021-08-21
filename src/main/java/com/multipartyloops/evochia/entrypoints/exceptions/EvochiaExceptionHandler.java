@@ -4,12 +4,11 @@ import com.multipartyloops.evochia.configuration.exceptions.AccessTokenNotProvid
 import com.multipartyloops.evochia.configuration.exceptions.InvalidAccessTokenException;
 import com.multipartyloops.evochia.configuration.exceptions.TokenNotInTheRightFormatException;
 import com.multipartyloops.evochia.configuration.exceptions.UnauthorizedUserException;
-import com.multipartyloops.evochia.core.commons.exceptions.MandatoryFieldNotPassedException;
 import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsException;
 import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsFormatException;
 import com.multipartyloops.evochia.core.product.exceptions.*;
 import com.multipartyloops.evochia.core.terminal.exceptions.TerminalNotFoundException;
-import com.multipartyloops.evochia.core.terminal.exceptions.ValueCannotBeNullOrEmptyException;
+import com.multipartyloops.evochia.core.commons.exceptions.ValueCannotBeNullOrEmptyException;
 import com.multipartyloops.evochia.entrypoints.exceptions.dtos.ErrorResponseBody;
 import com.multipartyloops.evochia.persistance.exceptions.RowNotFoundException;
 import org.springframework.http.HttpHeaders;
@@ -70,7 +69,6 @@ public class EvochiaExceptionHandler extends ResponseEntityExceptionHandler {
             AccessTokenNotProvidedException.class,
             InvalidCategoryNameException.class,
             InvalidProductCategoryId.class,
-            MandatoryFieldNotPassedException.class,
             ValueCannotBeNullOrEmptyException.class
     })
     protected ResponseEntity<Object> badRequest(RuntimeException ex, WebRequest request) {

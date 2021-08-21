@@ -6,6 +6,7 @@ public final class TableInfoSQLStatements {
     static final String GET_ALL_TABLES = "SELECT * FROM table_info";
     static final String SELECT_TABLE_BY_ID = "SELECT * FROM table_info WHERE table_id=?";
     static final String SELECT_TABLE_BY_ALIAS = "SELECT * FROM table_info WHERE table_alias=?";
+    static final String UPDATE_TABLE_ENABLED_STATUS = "UPDATE table_info SET enabled=? WHERE table_id=?";
 
     private TableInfoSQLStatements() {
     }

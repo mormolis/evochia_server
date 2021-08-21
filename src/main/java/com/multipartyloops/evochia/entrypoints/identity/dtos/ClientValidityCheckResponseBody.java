@@ -1,4 +1,4 @@
-package com.multipartyloops.evochia.entrypoints.identity.entities;
+package com.multipartyloops.evochia.entrypoints.identity.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,11 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ClientValidityCheckRequestBody {
+public class ClientValidityCheckResponseBody {
 
     @JsonProperty
-    private String clientId;
-
-    @JsonProperty
-    private String secret;
+    private boolean valid;
 }

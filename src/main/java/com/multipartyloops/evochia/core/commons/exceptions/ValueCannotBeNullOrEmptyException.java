@@ -1,4 +1,4 @@
-package com.multipartyloops.evochia.core.terminal.exceptions;
+package com.multipartyloops.evochia.core.commons.exceptions;
 
 public class ValueCannotBeNullOrEmptyException extends RuntimeException{
     public ValueCannotBeNullOrEmptyException(String message) {

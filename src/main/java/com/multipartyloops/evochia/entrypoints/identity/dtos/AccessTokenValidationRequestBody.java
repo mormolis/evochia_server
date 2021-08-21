@@ -1,4 +1,4 @@
-package com.multipartyloops.evochia.entrypoints.identity.entities;
+package com.multipartyloops.evochia.entrypoints.identity.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,17 +10,14 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class AccessTokenIssuanceRequestBody {
+public class AccessTokenValidationRequestBody {
 
     @JsonProperty
-    String clientId;
+    private String clientId;
 
     @JsonProperty
-    String secret;
+    private String secret;
 
     @JsonProperty
-    String username;
-
-    @JsonProperty
-    String password;
+    private String accessToken;
 }

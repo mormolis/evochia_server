@@ -1,4 +1,4 @@
-package com.multipartyloops.evochia.entrypoints.identity.entities;
+package com.multipartyloops.evochia.entrypoints.product.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -7,11 +7,14 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ClientValidityCheckResponseBody {
+public class CreateProductCategoryRequestBody {
 
     @JsonProperty
-    private boolean valid;
+    private String productCategoryName;
+
+    @JsonProperty
+    private boolean enabled;
 }

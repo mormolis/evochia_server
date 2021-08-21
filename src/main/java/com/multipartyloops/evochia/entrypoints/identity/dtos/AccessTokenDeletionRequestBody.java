@@ -1,4 +1,4 @@
-package com.multipartyloops.evochia.entrypoints.identity.entities;
+package com.multipartyloops.evochia.entrypoints.identity.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

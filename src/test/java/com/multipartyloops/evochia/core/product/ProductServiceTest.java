@@ -1,9 +1,9 @@
 package com.multipartyloops.evochia.core.product;
 
+import com.multipartyloops.evochia.core.commons.exceptions.ValueCannotBeNullOrEmptyException;
 import com.multipartyloops.evochia.core.product.dto.ProductDto;
 import com.multipartyloops.evochia.core.product.dto.ProductOptionDto;
 import com.multipartyloops.evochia.core.product.exceptions.CategoryDoesNotExistException;
-import com.multipartyloops.evochia.core.commons.exceptions.MandatoryFieldNotPassedException;
 import com.multipartyloops.evochia.core.product.exceptions.ProductNotFoundException;
 import com.multipartyloops.evochia.persistance.product.ProductRepository;
 import com.multipartyloops.evochia.persistance.product.option.ProductOptionRepository;
@@ -89,7 +89,7 @@ class ProductServiceTest {
 
         assertThatThrownBy(() -> productService.addProduct(missingCategoryId))
                 .hasMessage("Product needs to have a category")
-                .isInstanceOf(MandatoryFieldNotPassedException.class);
+                .isInstanceOf(ValueCannotBeNullOrEmptyException.class);
     }
 
     @Test
@@ -98,7 +98,7 @@ class ProductServiceTest {
 
         assertThatThrownBy(() -> productService.addProduct(missingName))
                 .hasMessage("Product needs to have a name")
-                .isInstanceOf(MandatoryFieldNotPassedException.class);
+                .isInstanceOf(ValueCannotBeNullOrEmptyException.class);
     }
 
     @Test
@@ -107,7 +107,7 @@ class ProductServiceTest {
 
         assertThatThrownBy(() -> productService.addProduct(missingPrice))
                 .hasMessage("Product needs to have a price")
-                .isInstanceOf(MandatoryFieldNotPassedException.class);
+                .isInstanceOf(ValueCannotBeNullOrEmptyException.class);
     }
 
     @Test
@@ -205,7 +205,7 @@ class ProductServiceTest {
     void productUpdateThrowsExceptionWhenIdIsNotPassed() {
 
         assertThatThrownBy(() -> productService.updateProduct(null, null, null, null, null, null, null))
-                .isInstanceOf(MandatoryFieldNotPassedException.class)
+                .isInstanceOf(ValueCannotBeNullOrEmptyException.class)
                 .hasMessage("Cannot update product without productId");
     }
 
