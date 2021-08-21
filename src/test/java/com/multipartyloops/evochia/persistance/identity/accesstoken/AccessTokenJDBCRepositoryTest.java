@@ -1,7 +1,7 @@
 package com.multipartyloops.evochia.persistance.identity.accesstoken;
 
-import com.multipartyloops.evochia.core.identity.entities.AccessTokenDto;
-import com.multipartyloops.evochia.core.identity.user.entities.Roles;
+import com.multipartyloops.evochia.core.identity.dtos.AccessTokenDto;
+import com.multipartyloops.evochia.core.identity.user.dtos.Roles;
 import com.multipartyloops.evochia.persistance.UuidPersistenceTransformer;
 import com.multipartyloops.evochia.persistance.exceptions.RowNotFoundException;
 import org.junit.jupiter.api.BeforeEach;

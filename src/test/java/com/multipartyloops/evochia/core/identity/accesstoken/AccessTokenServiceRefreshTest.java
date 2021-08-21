@@ -1,6 +1,6 @@
 package com.multipartyloops.evochia.core.identity.accesstoken;
 
-import com.multipartyloops.evochia.core.identity.entities.AccessTokenDto;
+import com.multipartyloops.evochia.core.identity.dtos.AccessTokenDto;
 import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsException;
 import org.junit.jupiter.api.Test;
 

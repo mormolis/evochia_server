@@ -6,8 +6,8 @@ import com.multipartyloops.evochia.configuration.exceptions.TokenNotInTheRightFo
 import com.multipartyloops.evochia.configuration.exceptions.UnauthorizedUserException;
 import com.multipartyloops.evochia.core.identity.accesstoken.AccessTokenService;
 import com.multipartyloops.evochia.core.identity.commons.RolesConverter;
-import com.multipartyloops.evochia.core.identity.entities.ValidateTokenResponseDto;
-import com.multipartyloops.evochia.core.identity.user.entities.Roles;
+import com.multipartyloops.evochia.core.identity.dtos.ValidateTokenResponseDto;
+import com.multipartyloops.evochia.core.identity.user.dtos.Roles;
 import com.multipartyloops.evochia.persistance.exceptions.RowNotFoundException;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.annotation.Aspect;

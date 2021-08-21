@@ -1,4 +1,4 @@
-package com.multipartyloops.evochia.core.identity.user.entities;
+package com.multipartyloops.evochia.core.identity.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -6,29 +6,33 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserDto {
+public class AccessTokenDto {
+
+    @JsonProperty
+    private String token;
+
+    @JsonProperty
+    private LocalDateTime tokenExpiry;
+
+    @JsonProperty
+    private String refreshToken;
+
+    @JsonProperty
+    private LocalDateTime refreshTokenExpiry;
 
     @JsonProperty
     private String userId;
 
     @JsonProperty
-    private String username;
+    private String clientId;
 
     @JsonProperty
-    private String password;
-
-    @JsonProperty
-    private List<Roles> roles;
-
-    @JsonProperty
-    private String name;
-
-    @JsonProperty
-    private String telephone;
+    private String roles;
 }
+

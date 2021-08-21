@@ -2,11 +2,11 @@ package com.multipartyloops.evochia.core.identity.accesstoken;
 
 import com.multipartyloops.evochia.core.identity.commons.RolesConverter;
 import com.multipartyloops.evochia.core.identity.client.ClientCredentialsService;
-import com.multipartyloops.evochia.core.identity.entities.AccessTokenDto;
-import com.multipartyloops.evochia.core.identity.entities.ValidateTokenResponseDto;
+import com.multipartyloops.evochia.core.identity.dtos.AccessTokenDto;
+import com.multipartyloops.evochia.core.identity.dtos.ValidateTokenResponseDto;
 import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsException;
 import com.multipartyloops.evochia.core.identity.user.UserAuthenticationService;
-import com.multipartyloops.evochia.core.identity.user.entities.UserAuthenticationDto;
+import com.multipartyloops.evochia.core.identity.user.dtos.UserAuthenticationDto;
 import com.multipartyloops.evochia.persistance.identity.accesstoken.AccessTokensRepository;
 import org.springframework.stereotype.Service;
 

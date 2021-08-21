@@ -1,4 +1,4 @@
-package com.multipartyloops.evochia.core.identity.entities;
+package com.multipartyloops.evochia.core.identity.dtos;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -10,14 +10,18 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class ClientCredentialsDto {
+public class ValidateTokenResponseDto {
+
+    @JsonProperty
+    private boolean valid;
+
+    @JsonProperty
+    private String userId;
 
     @JsonProperty
     private String clientId;
 
     @JsonProperty
-    private String secret;
+    private String roles;
 
-    @JsonProperty
-    private String device;
 }

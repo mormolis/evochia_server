@@ -1,4 +1,4 @@
-package com.multipartyloops.evochia.core.identity.user.entities;
+package com.multipartyloops.evochia.core.identity.user.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

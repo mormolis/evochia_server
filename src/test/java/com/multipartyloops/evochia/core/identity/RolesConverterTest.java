@@ -1,7 +1,7 @@
 package com.multipartyloops.evochia.core.identity;
 
 import com.multipartyloops.evochia.core.identity.commons.RolesConverter;
-import com.multipartyloops.evochia.core.identity.user.entities.Roles;
+import com.multipartyloops.evochia.core.identity.user.dtos.Roles;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

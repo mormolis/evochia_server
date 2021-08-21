@@ -1,6 +1,6 @@
 package com.multipartyloops.evochia.core.identity.client;
 
-import com.multipartyloops.evochia.core.identity.entities.ClientCredentialsDto;
+import com.multipartyloops.evochia.core.identity.dtos.ClientCredentialsDto;
 import com.multipartyloops.evochia.persistance.identity.clientcredentials.ClientCredentialsRepository;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Repository;

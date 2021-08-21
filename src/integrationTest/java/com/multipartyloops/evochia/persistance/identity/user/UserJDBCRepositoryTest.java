@@ -1,7 +1,7 @@
 package com.multipartyloops.evochia.persistance.identity.user;
 
-import com.multipartyloops.evochia.core.identity.user.entities.Roles;
-import com.multipartyloops.evochia.core.identity.user.entities.UserDto;
+import com.multipartyloops.evochia.core.identity.user.dtos.Roles;
+import com.multipartyloops.evochia.core.identity.user.dtos.UserDto;
 import com.multipartyloops.evochia.persistance.JDBCTest;
 import com.multipartyloops.evochia.persistance.UuidPersistenceTransformer;
 import org.junit.jupiter.api.BeforeEach;

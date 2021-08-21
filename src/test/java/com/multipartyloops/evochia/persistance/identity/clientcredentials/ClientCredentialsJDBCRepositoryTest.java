@@ -1,6 +1,6 @@
 package com.multipartyloops.evochia.persistance.identity.clientcredentials;
 
-import com.multipartyloops.evochia.core.identity.entities.ClientCredentialsDto;
+import com.multipartyloops.evochia.core.identity.dtos.ClientCredentialsDto;
 import com.multipartyloops.evochia.persistance.UuidPersistenceTransformer;
 import com.multipartyloops.evochia.persistance.exceptions.RowNotFoundException;
 import org.junit.jupiter.api.BeforeEach;

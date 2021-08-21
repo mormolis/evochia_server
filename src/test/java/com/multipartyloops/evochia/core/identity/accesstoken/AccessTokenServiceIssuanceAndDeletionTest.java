@@ -1,9 +1,9 @@
 package com.multipartyloops.evochia.core.identity.accesstoken;
 
-import com.multipartyloops.evochia.core.identity.entities.AccessTokenDto;
+import com.multipartyloops.evochia.core.identity.dtos.AccessTokenDto;
 import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsException;
-import com.multipartyloops.evochia.core.identity.user.entities.Roles;
-import com.multipartyloops.evochia.core.identity.user.entities.UserAuthenticationDto;
+import com.multipartyloops.evochia.core.identity.user.dtos.Roles;
+import com.multipartyloops.evochia.core.identity.user.dtos.UserAuthenticationDto;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;

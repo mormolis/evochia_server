@@ -2,7 +2,7 @@ package com.multipartyloops.evochia.core.identity.client;
 
 import com.multipartyloops.evochia.core.identity.commons.PasswordService;
 import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsFormatException;
-import com.multipartyloops.evochia.core.identity.entities.ClientCredentialsDto;
+import com.multipartyloops.evochia.core.identity.dtos.ClientCredentialsDto;
 import com.multipartyloops.evochia.persistance.exceptions.RowNotFoundException;
 import com.multipartyloops.evochia.persistance.identity.clientcredentials.ClientCredentialsRepository;
 import org.junit.jupiter.api.BeforeEach;

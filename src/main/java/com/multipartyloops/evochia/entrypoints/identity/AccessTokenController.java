@@ -1,8 +1,8 @@
 package com.multipartyloops.evochia.entrypoints.identity;
 
 import com.multipartyloops.evochia.core.identity.accesstoken.AccessTokenService;
-import com.multipartyloops.evochia.core.identity.entities.AccessTokenDto;
-import com.multipartyloops.evochia.core.identity.entities.ValidateTokenResponseDto;
+import com.multipartyloops.evochia.core.identity.dtos.AccessTokenDto;
+import com.multipartyloops.evochia.core.identity.dtos.ValidateTokenResponseDto;
 import com.multipartyloops.evochia.entrypoints.identity.dtos.AccessTokenIssuanceRequestBody;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

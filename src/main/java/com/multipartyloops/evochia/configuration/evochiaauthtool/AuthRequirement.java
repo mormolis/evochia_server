@@ -1,6 +1,6 @@
 package com.multipartyloops.evochia.configuration.evochiaauthtool;
 
-import com.multipartyloops.evochia.core.identity.user.entities.Roles;
+import com.multipartyloops.evochia.core.identity.user.dtos.Roles;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

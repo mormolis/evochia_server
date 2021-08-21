@@ -1,6 +1,6 @@
 package com.multipartyloops.evochia.core.identity.commons;
 
-import com.multipartyloops.evochia.core.identity.user.entities.Roles;
+import com.multipartyloops.evochia.core.identity.user.dtos.Roles;
 import org.springframework.stereotype.Service;
 
 import java.util.Arrays;
