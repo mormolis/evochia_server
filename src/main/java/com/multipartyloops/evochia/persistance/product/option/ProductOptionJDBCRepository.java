@@ -1,6 +1,6 @@
 package com.multipartyloops.evochia.persistance.product.option;
 
-import com.multipartyloops.evochia.core.product.entities.ProductOptionDto;
+import com.multipartyloops.evochia.core.product.dto.ProductOptionDto;
 import com.multipartyloops.evochia.persistance.UuidPersistenceTransformer;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -76,7 +76,7 @@ public class ProductOptionJDBCRepository implements ProductOptionRepository<Prod
     public void updateProductOption(String variation, BigDecimal price, String productOptionId) {
 
         jdbcTemplate.update(
-                "UPDATE product_options SET variation=?, price=? WHERE option_id=?",
+                PRODUCT_OPTION_UPDATE,
                 variation,
                 price,
                 uuidPersistenceTransformer.fromString(productOptionId)

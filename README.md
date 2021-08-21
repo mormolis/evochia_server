@@ -15,7 +15,7 @@ GRANT ALL ON evochia_test.* TO 'evochia_developer'@'localhost';
 ### 2. Run the application  
 
 ```
-./gradlew bootRun --spring.profiles.active=dev
+./gradlew bootRun -Dspring.profiles.active=dev
 ```
 
 -----------------

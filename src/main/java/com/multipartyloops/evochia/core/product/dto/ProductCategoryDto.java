@@ -1,4 +1,4 @@
-package com.multipartyloops.evochia.core.product.entities;
+package com.multipartyloops.evochia.core.product.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;

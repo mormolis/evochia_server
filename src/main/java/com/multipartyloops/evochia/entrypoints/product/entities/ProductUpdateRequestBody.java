@@ -2,7 +2,7 @@ package com.multipartyloops.evochia.entrypoints.product.entities;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.multipartyloops.evochia.core.product.entities.ProductOptionDto;
+import com.multipartyloops.evochia.core.product.dto.ProductOptionDto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

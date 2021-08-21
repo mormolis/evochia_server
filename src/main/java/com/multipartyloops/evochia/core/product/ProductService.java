@@ -1,11 +1,10 @@
 package com.multipartyloops.evochia.core.product;
 
-import com.multipartyloops.evochia.core.commons.Preconditions;
 import com.multipartyloops.evochia.core.commons.UUIDFormatChecker;
-import com.multipartyloops.evochia.core.product.entities.ProductDto;
-import com.multipartyloops.evochia.core.product.entities.ProductOptionDto;
+import com.multipartyloops.evochia.core.product.dto.ProductDto;
+import com.multipartyloops.evochia.core.product.dto.ProductOptionDto;
 import com.multipartyloops.evochia.core.product.exceptions.CategoryDoesNotExistException;
-import com.multipartyloops.evochia.core.product.exceptions.MandatoryFieldNotPassedException;
+import com.multipartyloops.evochia.core.commons.exceptions.MandatoryFieldNotPassedException;
 import com.multipartyloops.evochia.core.product.exceptions.ProductNotFoundException;
 import com.multipartyloops.evochia.persistance.product.ProductRepository;
 import com.multipartyloops.evochia.persistance.product.option.ProductOptionRepository;
@@ -16,6 +15,9 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+
+import static com.multipartyloops.evochia.core.commons.Preconditions.throwWhenNull;
+import static com.multipartyloops.evochia.core.commons.Preconditions.throwWhenNullOrEmpty;
 
 @Service
 public class ProductService {
@@ -73,7 +75,7 @@ public class ProductService {
     }
 
     public void updateProduct(String productId, String name, String description, BigDecimal price, Boolean enabled, String preferredTerminalId, List<ProductOptionDto> productOptions) {
-        Preconditions.throwWhenNullOrEmpty(productId, new MandatoryFieldNotPassedException("Cannot update product without productId"));
+        throwWhenNullOrEmpty(productId, new MandatoryFieldNotPassedException("Cannot update product without productId"));
         UUIDFormatChecker.confirmOrThrow(productId, new ProductNotFoundException("Product not found"));
 
         ProductDto existingProduct = getProductById(productId);
@@ -118,9 +120,9 @@ public class ProductService {
     }
 
     private void preconditions(ProductDto productDto) {
-        Preconditions.throwWhenNullOrEmpty(productDto.getCategoryId(), new MandatoryFieldNotPassedException("Product needs to have a category"));
-        Preconditions.throwWhenNullOrEmpty(productDto.getName(), new MandatoryFieldNotPassedException("Product needs to have a name"));
-        Preconditions.throwWhenNull(productDto.getPrice(), new MandatoryFieldNotPassedException("Product needs to have a price"));
+        throwWhenNullOrEmpty(productDto.getCategoryId(), new MandatoryFieldNotPassedException("Product needs to have a category"));
+        throwWhenNullOrEmpty(productDto.getName(), new MandatoryFieldNotPassedException("Product needs to have a name"));
+        throwWhenNull(productDto.getPrice(), new MandatoryFieldNotPassedException("Product needs to have a price"));
     }
 
     private ProductDto constructUpdatedProduct(ProductDto existingProduct, String name, String description, BigDecimal price, Boolean enabled, String preferredTerminalId) {

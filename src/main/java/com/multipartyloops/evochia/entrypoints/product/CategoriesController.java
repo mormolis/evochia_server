@@ -1,7 +1,7 @@
 package com.multipartyloops.evochia.entrypoints.product;
 
 import com.multipartyloops.evochia.core.product.category.ProductCategoryService;
-import com.multipartyloops.evochia.core.product.entities.ProductCategoryDto;
+import com.multipartyloops.evochia.core.product.dto.ProductCategoryDto;
 import com.multipartyloops.evochia.entrypoints.product.entities.CreateProductCategoryRequestBody;
 import com.multipartyloops.evochia.entrypoints.product.entities.CreateProductCategoryResponse;
 import com.multipartyloops.evochia.entrypoints.product.entities.DeleteProductCategoryRequestBody;

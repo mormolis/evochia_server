@@ -1,7 +1,7 @@
 package com.multipartyloops.evochia.persistance.product;
 
-import com.multipartyloops.evochia.core.product.entities.ProductCategoryDto;
-import com.multipartyloops.evochia.core.product.entities.ProductDto;
+import com.multipartyloops.evochia.core.product.dto.ProductCategoryDto;
+import com.multipartyloops.evochia.core.product.dto.ProductDto;
 import com.multipartyloops.evochia.core.terminal.dto.TerminalDto;
 import com.multipartyloops.evochia.persistance.JDBCTest;
 import com.multipartyloops.evochia.persistance.UuidPersistenceTransformer;

@@ -1,8 +1,8 @@
 package com.multipartyloops.evochia.persistance.product.option;
 
-import com.multipartyloops.evochia.core.product.entities.ProductCategoryDto;
-import com.multipartyloops.evochia.core.product.entities.ProductDto;
-import com.multipartyloops.evochia.core.product.entities.ProductOptionDto;
+import com.multipartyloops.evochia.core.product.dto.ProductCategoryDto;
+import com.multipartyloops.evochia.core.product.dto.ProductDto;
+import com.multipartyloops.evochia.core.product.dto.ProductOptionDto;
 import com.multipartyloops.evochia.core.terminal.dto.TerminalDto;
 import com.multipartyloops.evochia.persistance.product.ProductJDBCTest;
 import org.junit.jupiter.api.BeforeEach;

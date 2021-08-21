@@ -1,8 +1,8 @@
 package com.multipartyloops.evochia.persistance.product;
 
-import com.multipartyloops.evochia.core.product.entities.ProductCategoryDto;
-import com.multipartyloops.evochia.core.product.entities.ProductDto;
-import com.multipartyloops.evochia.core.product.entities.ProductOptionDto;
+import com.multipartyloops.evochia.core.product.dto.ProductCategoryDto;
+import com.multipartyloops.evochia.core.product.dto.ProductDto;
+import com.multipartyloops.evochia.core.product.dto.ProductOptionDto;
 import com.multipartyloops.evochia.core.terminal.dto.TerminalDto;
 import com.multipartyloops.evochia.persistance.product.option.ProductOptionRepository;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,8 +30,8 @@ import static org.mockito.Mockito.times;
 class ProductJDBCRepositoryTest extends ProductJDBCTest {
 
     @Mock
-    ProductOptionRepository<ProductOptionDto> productOptionRepositoryMock;
-    ProductJDBCRepository productJDBCRepository;
+    private ProductOptionRepository<ProductOptionDto> productOptionRepositoryMock;
+    private ProductJDBCRepository productJDBCRepository;
 
     @BeforeEach
     void init() {

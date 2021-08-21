@@ -25,7 +25,6 @@ public class TerminalsJDBCRepository implements TerminalsRepository<TerminalDto>
 
     @Override
     public void addTerminal(TerminalDto terminal) {
-
         jdbcTemplate.update(TERMINALS_INSERTION,
                 uuidPersistenceTransformer.fromString(terminal.getTerminalId()),
                 terminal.getName()
@@ -55,7 +54,6 @@ public class TerminalsJDBCRepository implements TerminalsRepository<TerminalDto>
 
     @Override
     public Optional<TerminalDto> getTerminalById(String terminalId) {
-
         Object binaryTerminalId = uuidPersistenceTransformer.fromString(terminalId);
         List<TerminalDto> query = jdbcTemplate.query(TERMINALS_SELECT_BY_ID,
                 this::parseTerminal,

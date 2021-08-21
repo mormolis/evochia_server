@@ -1,8 +1,8 @@
 package com.multipartyloops.evochia.persistance.product.category;
 
-import com.multipartyloops.evochia.core.product.entities.ProductCategoryDto;
-import com.multipartyloops.evochia.core.product.entities.ProductDto;
-import com.multipartyloops.evochia.core.product.entities.ProductOptionDto;
+import com.multipartyloops.evochia.core.product.dto.ProductCategoryDto;
+import com.multipartyloops.evochia.core.product.dto.ProductDto;
+import com.multipartyloops.evochia.core.product.dto.ProductOptionDto;
 import com.multipartyloops.evochia.persistance.UuidPersistenceTransformer;
 import com.multipartyloops.evochia.persistance.product.ProductRepository;
 import com.multipartyloops.evochia.persistance.product.option.ProductOptionRepository;

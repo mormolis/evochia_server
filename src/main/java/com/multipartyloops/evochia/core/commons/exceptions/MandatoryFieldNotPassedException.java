@@ -1,4 +1,4 @@
-package com.multipartyloops.evochia.core.product.exceptions;
+package com.multipartyloops.evochia.core.commons.exceptions;
 
 public class MandatoryFieldNotPassedException extends RuntimeException{
 

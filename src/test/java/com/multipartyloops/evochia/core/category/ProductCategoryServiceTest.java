@@ -1,7 +1,7 @@
 package com.multipartyloops.evochia.core.category;
 
 import com.multipartyloops.evochia.core.product.category.ProductCategoryService;
-import com.multipartyloops.evochia.core.product.entities.ProductCategoryDto;
+import com.multipartyloops.evochia.core.product.dto.ProductCategoryDto;
 import com.multipartyloops.evochia.core.product.exceptions.InvalidCategoryNameException;
 import com.multipartyloops.evochia.core.product.exceptions.InvalidProductCategoryId;
 import com.multipartyloops.evochia.core.product.exceptions.ProductCategoryCouldNotBeFoundException;
