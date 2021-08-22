@@ -4,6 +4,7 @@ import com.multipartyloops.evochia.configuration.exceptions.AccessTokenNotProvid
 import com.multipartyloops.evochia.configuration.exceptions.InvalidAccessTokenException;
 import com.multipartyloops.evochia.configuration.exceptions.TokenNotInTheRightFormatException;
 import com.multipartyloops.evochia.configuration.exceptions.UnauthorizedUserException;
+import com.multipartyloops.evochia.core.identity.exceptions.CannotUpdateDeactivatedUserException;
 import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsException;
 import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsFormatException;
 import com.multipartyloops.evochia.core.product.exceptions.*;

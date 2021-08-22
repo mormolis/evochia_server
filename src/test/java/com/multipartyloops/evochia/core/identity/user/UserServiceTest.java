@@ -3,7 +3,7 @@ package com.multipartyloops.evochia.core.identity.user;
 import com.multipartyloops.evochia.core.identity.commons.PasswordService;
 import com.multipartyloops.evochia.core.identity.user.dtos.Roles;
 import com.multipartyloops.evochia.core.identity.user.dtos.UserDto;
-import com.multipartyloops.evochia.entrypoints.exceptions.CannotUpdateDeactivatedUserException;
+import com.multipartyloops.evochia.core.identity.exceptions.CannotUpdateDeactivatedUserException;
 import com.multipartyloops.evochia.persistance.identity.user.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
