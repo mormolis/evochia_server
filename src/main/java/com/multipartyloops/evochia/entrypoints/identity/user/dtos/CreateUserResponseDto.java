@@ -1,4 +1,4 @@
-package com.multipartyloops.evochia.entrypoints.users.dtos;
+package com.multipartyloops.evochia.entrypoints.identity.user.dtos;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

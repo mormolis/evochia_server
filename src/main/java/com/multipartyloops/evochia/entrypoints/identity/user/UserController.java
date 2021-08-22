@@ -1,11 +1,11 @@
-package com.multipartyloops.evochia.entrypoints.users;
+package com.multipartyloops.evochia.entrypoints.identity.user;
 
 import com.multipartyloops.evochia.configuration.evochiaauthtool.AuthRequirement;
 import com.multipartyloops.evochia.core.identity.user.UserService;
 import com.multipartyloops.evochia.core.identity.user.dtos.Roles;
 import com.multipartyloops.evochia.core.identity.user.dtos.UserDto;
-import com.multipartyloops.evochia.entrypoints.users.dtos.CreateUserResponseDto;
-import com.multipartyloops.evochia.entrypoints.users.dtos.RequestUserByRolesDto;
+import com.multipartyloops.evochia.entrypoints.identity.user.dtos.CreateUserResponseDto;
+import com.multipartyloops.evochia.entrypoints.identity.user.dtos.RequestUserByRolesDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
