@@ -7,6 +7,7 @@ import com.multipartyloops.evochia.configuration.exceptions.UnauthorizedUserExce
 import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsException;
 import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsFormatException;
 import com.multipartyloops.evochia.core.product.exceptions.*;
+import com.multipartyloops.evochia.core.table.exceptions.TableNotFoundException;
 import com.multipartyloops.evochia.core.terminal.exceptions.TerminalNotFoundException;
 import com.multipartyloops.evochia.core.commons.exceptions.ValueCannotBeNullOrEmptyException;
 import com.multipartyloops.evochia.entrypoints.exceptions.dtos.ErrorResponseBody;
@@ -42,7 +43,8 @@ public class EvochiaExceptionHandler extends ResponseEntityExceptionHandler {
             ProductCategoryCouldNotBeFoundException.class,
             ProductNotFoundException.class,
             CategoryDoesNotExistException.class,
-            TerminalNotFoundException.class})
+            TerminalNotFoundException.class,
+            TableNotFoundException.class})
     protected ResponseEntity<Object> valueNotFound(RuntimeException ex, WebRequest request) {
         String message = ex.getMessage();
         if (ex instanceof NumberFormatException) {

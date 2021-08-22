@@ -3,11 +3,13 @@ package com.multipartyloops.evochia.core.table;
 import com.multipartyloops.evochia.core.commons.exceptions.ValueCannotBeNullOrEmptyException;
 import com.multipartyloops.evochia.core.table.dto.TableGroupingDto;
 import com.multipartyloops.evochia.core.table.dto.TableInfoDto;
+import com.multipartyloops.evochia.core.table.exceptions.TableNotFoundException;
 import com.multipartyloops.evochia.persistance.table.TableInfoRepository;
 import com.multipartyloops.evochia.persistance.table.grouping.TableGroupingRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 
+import java.util.List;
 import java.util.UUID;
 
 import static com.multipartyloops.evochia.core.commons.Preconditions.throwWhenNullOrEmpty;
@@ -36,6 +38,22 @@ public class TableService {
                                            createTableWithNewGrouping(tableGroupName, tableAlias, enabled));
         });
         return tableInfoRepository.getTableByAlias(tableAlias).orElseGet(TableInfoDto::new);
+    }
+
+    public List<TableInfoDto> getAllTables() {
+        return tableInfoRepository.getAllTables();
+    }
+
+    public TableInfoDto getTableById(String tableId) {
+        throwWhenNullOrEmpty(tableId, new ValueCannotBeNullOrEmptyException("Table id cannot be null or empty"));
+        return tableInfoRepository.getTableById(tableId)
+                           .orElseThrow(()-> new TableNotFoundException("Table id could not be found"));
+    }
+
+    public TableInfoDto getTableByAlias(String tableAlias) {
+        throwWhenNullOrEmpty(tableAlias, new ValueCannotBeNullOrEmptyException("Table alias cannot be null or empty"));
+        return tableInfoRepository.getTableByAlias(tableAlias)
+                                  .orElseThrow(()-> new TableNotFoundException("Table alias could not be found"));
     }
 
     public void removeTable(String tableAlias) {
