@@ -33,4 +33,5 @@ public abstract class TableJDBCTest extends JDBCTest {
                             tableInfoDto.getEnabled());
         return  tableInfoDto;
     }
+
 }

@@ -20,7 +20,11 @@ CREATE TABLE order_info (
     order_id BINARY(16) NOT NULL,
     table_id BINARY(16) NOT NULL,
     user_id BINARY(16) NOT NULL,
-    order_contents TEXT NOT NULL,
+    canceled BOOLEAN DEFAULT false,
+    active BOOLEAN DEFAULT true,
+    last_updated TIMESTAMP NOT NULL,
+    comments TEXT,
+    details TEXT NOT NULL,
     PRIMARY KEY (order_id),
     FOREIGN KEY (table_id) REFERENCES table_info (table_id),
     FOREIGN KEY (user_id) REFERENCES users (user_id)

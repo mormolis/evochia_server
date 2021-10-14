@@ -77,7 +77,6 @@ public class UserJDBCRepository implements UserRepository<UserDto> {
     public List<UserDto> getAllUsersByRole(Roles role) {
         List<byte[]> userIds = jdbcTemplate.query(ROLES_SELECT_USER_ID_BY_ROLE, this::getUserId, role.name());
         List<UserDto> users = new ArrayList<>();
-        // think about returning the users without the roles to make it faster
         userIds.forEach(userId -> {
             UserDto userById = getUserById(uuidPersistenceTransformer.getUUIDFromBytes(userId));
             users.add(userById);

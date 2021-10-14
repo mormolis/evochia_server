@@ -19,8 +19,8 @@ public class TableInfoJDBCRepositoryTest extends TableJDBCTest {
 
     @Test
     void retirevesATable() {
-        final var tableGroup = super.insertAGroup("aGroup", true);
-        final var tableInfoDto = insertATable("an-alias", tableGroup.getGroupId(), true);
+        final var tableGroup = super.insertAGroup(UUID.randomUUID().toString(), true);
+        final var tableInfoDto = insertATable(UUID.randomUUID().toString(), tableGroup.getGroupId(), true);
 
         final var tableById = tableInfoJDBCRepository.getTableById(tableInfoDto.getTableId());
 
@@ -29,18 +29,18 @@ public class TableInfoJDBCRepositoryTest extends TableJDBCTest {
 
     @Test
     void retrievesATableByAlias() {
-        final var tableGroup = super.insertAGroup("aName", true);
-        final var tableInfoDto = insertATable("an-alias", tableGroup.getGroupId(), true);
+        final var tableGroup = super.insertAGroup(UUID.randomUUID().toString(), true);
+        final var tableInfoDto = insertATable(UUID.randomUUID().toString(), tableGroup.getGroupId(), true);
 
-        final var tableInfoById = tableInfoJDBCRepository.getTableByAlias("an-alias");
+        final var tableInfoById = tableInfoJDBCRepository.getTableByAlias(tableInfoDto.getTableAlias());
 
         assertThat(tableInfoById.get()).isEqualTo(tableInfoDto);
     }
 
     @Test
     void insertATableInfo() {
-        final var tableGroup = super.insertAGroup("aName", true);
-        final var table = new TableInfoDto(UUID.randomUUID().toString(), "my-table", tableGroup.getGroupId(), true);
+        final var tableGroup = super.insertAGroup(UUID.randomUUID().toString(), true);
+        final var table = new TableInfoDto(UUID.randomUUID().toString(), UUID.randomUUID().toString(), tableGroup.getGroupId(), true);
 
         tableInfoJDBCRepository.insertTable(table);
 
@@ -49,8 +49,8 @@ public class TableInfoJDBCRepositoryTest extends TableJDBCTest {
 
     @Test
     void deletesATableInfo() {
-        final var tableGroup = super.insertAGroup("aName", true);
-        final var tableInfoDto = insertATable("an-alias", tableGroup.getGroupId(), true);
+        final var tableGroup = super.insertAGroup(UUID.randomUUID().toString(), true);
+        final var tableInfoDto = insertATable(UUID.randomUUID().toString(), tableGroup.getGroupId(), true);
 
         tableInfoJDBCRepository.deleteTable(tableInfoDto.getTableId());
 
@@ -59,9 +59,9 @@ public class TableInfoJDBCRepositoryTest extends TableJDBCTest {
 
     @Test
     void getsAllTableInfo() {
-        final var tableGroup = super.insertAGroup("aName", true);
-        final var table = insertATable("an-alias", tableGroup.getGroupId(), true);
-        final var anotherTable = insertATable("another-alias", tableGroup.getGroupId(), false);
+        final var tableGroup = super.insertAGroup(UUID.randomUUID().toString(), true);
+        final var table = insertATable(UUID.randomUUID().toString(), tableGroup.getGroupId(), true);
+        final var anotherTable = insertATable(UUID.randomUUID().toString(), tableGroup.getGroupId(), false);
 
         final var allTables = tableInfoJDBCRepository.getAllTables();
 
@@ -70,8 +70,8 @@ public class TableInfoJDBCRepositoryTest extends TableJDBCTest {
 
     @Test
     void updatesTableStatusFromEnabledToDisabled(){
-        final var tableGroup = super.insertAGroup("aName", true);
-        final var table = insertATable("an-alias", tableGroup.getGroupId(), true);
+        final var tableGroup = super.insertAGroup(UUID.randomUUID().toString(), true);
+        final var table = insertATable(UUID.randomUUID().toString(), tableGroup.getGroupId(), true);
 
         tableInfoJDBCRepository.disableTable(table.getTableId());
 
@@ -80,8 +80,8 @@ public class TableInfoJDBCRepositoryTest extends TableJDBCTest {
 
     @Test
     void updatesTableStatusFromDisabledToEnabled(){
-        final var tableGroup = super.insertAGroup("aName", true);
-        final var table = insertATable("an-alias", tableGroup.getGroupId(), false);
+        final var tableGroup = super.insertAGroup(UUID.randomUUID().toString(), true);
+        final var table = insertATable(UUID.randomUUID().toString(), tableGroup.getGroupId(), false);
 
         tableInfoJDBCRepository.enableTable(table.getTableId());
 

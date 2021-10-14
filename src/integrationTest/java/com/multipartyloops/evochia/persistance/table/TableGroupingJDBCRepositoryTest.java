@@ -20,7 +20,7 @@ public class TableGroupingJDBCRepositoryTest extends TableJDBCTest {
 
     @Test
     void retrievesATableGrouping() {
-        final var tableGroupingDto = super.insertAGroup("aName", true);
+        final var tableGroupingDto = super.insertAGroup(UUID.randomUUID().toString(), true);
 
         final var tableGroupById = tableGroupingJDBCRepository.getTableGroupById(tableGroupingDto.getGroupId());
 
@@ -29,7 +29,7 @@ public class TableGroupingJDBCRepositoryTest extends TableJDBCTest {
 
     @Test
     void retrievesATableGroupingByName() {
-        final var tableGroupingDto = super.insertAGroup("aName", true);
+        final var tableGroupingDto = super.insertAGroup(UUID.randomUUID().toString(), true);
 
         final var tableGroupById = tableGroupingJDBCRepository.getTableGroupByName(tableGroupingDto.getGroupName());
 
@@ -38,7 +38,7 @@ public class TableGroupingJDBCRepositoryTest extends TableJDBCTest {
 
     @Test
     void insertsATableGrouping() {
-        TableGroupingDto tableGroupingDto = new TableGroupingDto(UUID.randomUUID().toString(), "anotherName", true);
+        TableGroupingDto tableGroupingDto = new TableGroupingDto(UUID.randomUUID().toString(), UUID.randomUUID().toString(), true);
 
         tableGroupingJDBCRepository.insertTableGroup(tableGroupingDto);
 
@@ -47,7 +47,7 @@ public class TableGroupingJDBCRepositoryTest extends TableJDBCTest {
 
     @Test
     void deletesATableGrouping() {
-        final var tableGroupingDto = super.insertAGroup("a-name", true);
+        final var tableGroupingDto = super.insertAGroup(UUID.randomUUID().toString(), true);
 
         tableGroupingJDBCRepository.deleteTableGroup(tableGroupingDto.getGroupId());
 
@@ -56,8 +56,9 @@ public class TableGroupingJDBCRepositoryTest extends TableJDBCTest {
 
     @Test
     void getsAllTableGroups() {
-        final var aGroup = super.insertAGroup("a-name", true);
-        final var anotherGroup = super.insertAGroup("another-name", false);
+        setupCleanDatabase();
+        final var aGroup = super.insertAGroup(UUID.randomUUID().toString(), true);
+        final var anotherGroup = super.insertAGroup(UUID.randomUUID().toString(), false);
 
         final var allTableGroups = tableGroupingJDBCRepository.getAllTableGroups();
 
