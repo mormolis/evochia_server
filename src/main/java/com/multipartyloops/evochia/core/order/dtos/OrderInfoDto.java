@@ -4,7 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 
 @Data
@@ -18,5 +17,5 @@ public class OrderInfoDto {
     private Boolean canceled;
     private LocalDateTime lastUpdated;
     private String comments;
-    private String details;
+    private String details;  // json as string of many orderDetails
 }
