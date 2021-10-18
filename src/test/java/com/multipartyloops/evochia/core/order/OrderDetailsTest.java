@@ -1,7 +1,8 @@
-package com.multipartyloops.evochia.core.order.dtos;
+package com.multipartyloops.evochia.core.order;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.multipartyloops.evochia.core.order.OrderDetails;
 import com.multipartyloops.evochia.core.product.dto.ProductOptionDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,7 +12,7 @@ import org.junit.jupiter.params.provider.CsvSource;
 import java.math.BigDecimal;
 import java.util.List;
 
-import static com.multipartyloops.evochia.core.order.dtos.OrderDetails.OrderProduct;
+import static com.multipartyloops.evochia.core.order.OrderDetails.OrderProduct;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 

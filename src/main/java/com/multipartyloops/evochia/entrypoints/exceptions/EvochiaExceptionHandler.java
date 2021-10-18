@@ -7,6 +7,7 @@ import com.multipartyloops.evochia.configuration.exceptions.UnauthorizedUserExce
 import com.multipartyloops.evochia.core.identity.exceptions.CannotUpdateDeactivatedUserException;
 import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsException;
 import com.multipartyloops.evochia.core.identity.exceptions.InvalidCredentialsFormatException;
+import com.multipartyloops.evochia.core.order.exceptions.ProductOptionMatchingNotFoundException;
 import com.multipartyloops.evochia.core.product.exceptions.*;
 import com.multipartyloops.evochia.core.table.exceptions.TableNotFoundException;
 import com.multipartyloops.evochia.core.terminal.exceptions.TerminalNotFoundException;
@@ -61,7 +62,9 @@ public class EvochiaExceptionHandler extends ResponseEntityExceptionHandler {
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.UNAUTHORIZED, request);
     }
 
-    @ExceptionHandler(value = {UnauthorizedUserException.class})
+    @ExceptionHandler(value = {UnauthorizedUserException.class,
+            ProductOptionNotFoundException.class,
+            ProductOptionMatchingNotFoundException.class})
     protected ResponseEntity<Object> forbidden(RuntimeException ex, WebRequest request) {
         Object bodyOfResponse = new ErrorResponseBody(ex.getMessage());
         return handleExceptionInternal(ex, bodyOfResponse, new HttpHeaders(), HttpStatus.FORBIDDEN, request);

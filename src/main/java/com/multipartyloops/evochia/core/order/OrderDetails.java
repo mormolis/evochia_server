@@ -1,4 +1,4 @@
-package com.multipartyloops.evochia.core.order.dtos;
+package com.multipartyloops.evochia.core.order;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
