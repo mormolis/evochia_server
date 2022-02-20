@@ -2,19 +2,15 @@ package com.multipartyloops.evochia.core.order;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.multipartyloops.evochia.core.order.OrderDetails;
 import com.multipartyloops.evochia.core.product.dto.ProductOptionDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
-import static com.multipartyloops.evochia.core.order.OrderDetails.OrderProduct;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
 class OrderDetailsTest {
 
@@ -27,58 +23,58 @@ class OrderDetailsTest {
     }
 
     final List<ProductOptionDto> productOptions = List.of(new ProductOptionDto("an-id", "a-product-id", "aVariation", new BigDecimal("0.5")),
-                                                          new ProductOptionDto("an-id", "a-product-id", "aVariation", new BigDecimal(1)));
+            new ProductOptionDto("an-id", "a-product-id", "aVariation", new BigDecimal(1)));
     OrderProduct orderProduct = new OrderProduct("a-unique-order-product-id",
-                                                 "anId",
-                                                 productOptions,
-                                                 10,
-                                                 "anote",
-                                                 false,
-                                                 "a-terminal-id",
-                                                 "aproduct",
-                                                 new BigDecimal("2.5"),
-                                                 false);
+            "anId",
+            productOptions,
+            10,
+            "anote",
+            false,
+            "a-terminal-id",
+            "aproduct",
+            new BigDecimal("2.5"),
+            false);
     OrderProduct anotherProduct = new OrderProduct("another-unique-order-product-id",
-                                                   "anId",
-                                                   productOptions,
-                                                   10,
-                                                   "anote",
-                                                   false,
-                                                   "a-terminal-id",
-                                                   "aproduct",
-                                                   new BigDecimal(5),
-                                                   false);
+            "anId",
+            productOptions,
+            10,
+            "anote",
+            false,
+            "a-terminal-id",
+            "aproduct",
+            new BigDecimal(5),
+            false);
 
     OrderProduct aPaidOrderProduct = new OrderProduct("a-paid-one",
-                                                      "anId",
-                                                      productOptions,
-                                                      10,
-                                                      "anote",
-                                                      true,
-                                                      "a-terminal-id",
-                                                      "aproduct",
-                                                      new BigDecimal(5),
-                                                      false);
+            "anId",
+            productOptions,
+            10,
+            "anote",
+            true,
+            "a-terminal-id",
+            "aproduct",
+            new BigDecimal(5),
+            false);
     OrderProduct aCanceledOrderProduct = new OrderProduct("a-canceled-one",
-                                                          "anId",
-                                                          productOptions,
-                                                          10,
-                                                          "anote",
-                                                          false,
-                                                          "a-terminal-id",
-                                                          "aproduct",
-                                                          new BigDecimal(100),
-                                                          true);
+            "anId",
+            productOptions,
+            10,
+            "anote",
+            false,
+            "a-terminal-id",
+            "aproduct",
+            new BigDecimal(100),
+            true);
     OrderProduct aNoDiscountOrderProduct = new OrderProduct("a-canceled-one",
-                                                          "anId",
-                                                          productOptions,
-                                                          0,
-                                                          "anote",
-                                                          false,
-                                                          "a-terminal-id",
-                                                          "aproduct",
-                                                          new BigDecimal(100),
-                                                          false);
+            "anId",
+            productOptions,
+            0,
+            "anote",
+            false,
+            "a-terminal-id",
+            "aproduct",
+            new BigDecimal(100),
+            false);
 
     @Test
     void calculatesTheFinalPrice() {
@@ -106,7 +102,7 @@ class OrderDetailsTest {
         orderDetails.addToOrder(orderProduct);
         orderDetails.addToOrder(anotherProduct);
 
-        assertThat(orderDetails.toJson(objectMapper)).isEqualTo("{\"orderProducts\":[{\"id\":\"a-unique-order-product-id\",\"productId\":\"anId\",\"options\":[{\"productOptionId\":\"an-id\",\"productId\":\"a-product-id\",\"variation\":\"aVariation\",\"price\":0.5},{\"productOptionId\":\"an-id\",\"productId\":\"a-product-id\",\"variation\":\"aVariation\",\"price\":1}],\"discountPercentage\":10,\"notes\":\"anote\",\"paid\":false,\"terminalId\":\"a-terminal-id\",\"productName\":\"aproduct\",\"price\":2.5,\"canceled\":false},{\"id\":\"another-unique-order-product-id\",\"productId\":\"anId\",\"options\":[{\"productOptionId\":\"an-id\",\"productId\":\"a-product-id\",\"variation\":\"aVariation\",\"price\":0.5},{\"productOptionId\":\"an-id\",\"productId\":\"a-product-id\",\"variation\":\"aVariation\",\"price\":1}],\"discountPercentage\":10,\"notes\":\"anote\",\"paid\":false,\"terminalId\":\"a-terminal-id\",\"productName\":\"aproduct\",\"price\":5,\"canceled\":false}],\"totalPrice\":9.45}");
+        assertThat(orderDetails.toJsonString(objectMapper)).isEqualTo("{\"orderProducts\":[{\"id\":\"a-unique-order-product-id\",\"productId\":\"anId\",\"options\":[{\"productOptionId\":\"an-id\",\"productId\":\"a-product-id\",\"variation\":\"aVariation\",\"price\":0.5},{\"productOptionId\":\"an-id\",\"productId\":\"a-product-id\",\"variation\":\"aVariation\",\"price\":1}],\"discountPercentage\":10,\"notes\":\"anote\",\"paid\":false,\"terminalId\":\"a-terminal-id\",\"productName\":\"aproduct\",\"price\":2.5,\"canceled\":false},{\"id\":\"another-unique-order-product-id\",\"productId\":\"anId\",\"options\":[{\"productOptionId\":\"an-id\",\"productId\":\"a-product-id\",\"variation\":\"aVariation\",\"price\":0.5},{\"productOptionId\":\"an-id\",\"productId\":\"a-product-id\",\"variation\":\"aVariation\",\"price\":1}],\"discountPercentage\":10,\"notes\":\"anote\",\"paid\":false,\"terminalId\":\"a-terminal-id\",\"productName\":\"aproduct\",\"price\":5,\"canceled\":false}],\"totalPrice\":9.45}");
     }
 
     @Test
@@ -182,21 +178,21 @@ class OrderDetailsTest {
     void anOrderProductThatIsCanceledCannotBeCanceledAgain() {
         orderDetails.addToOrder(aCanceledOrderProduct);
 
-        assertThat(orderDetails.cancelOrderProductBy(aCanceledOrderProduct.getId())).isFalse();
+        assertThat(orderDetails.cancelOrderProductBy(aCanceledOrderProduct.getOrderProductId())).isFalse();
     }
 
     @Test
     void anOrderProductThatIsPaidCannotBePaidAgain() {
         orderDetails.addToOrder(aPaidOrderProduct);
 
-        assertThat(orderDetails.markOrderProductAsPaid(aPaidOrderProduct.getId())).isFalse();
+        assertThat(orderDetails.markOrderProductAsPaid(aPaidOrderProduct.getOrderProductId())).isFalse();
     }
 
     @Test
     void anUnpaidProductThatCannotBeMarkedAsUnpaid() {
         orderDetails.addToOrder(anotherProduct);
 
-        assertThat(orderDetails.markProductOrderAsNotPaid(anotherProduct.getId())).isFalse();
+        assertThat(orderDetails.markProductOrderAsNotPaid(anotherProduct.getOrderProductId())).isFalse();
     }
 
 
@@ -206,7 +202,7 @@ class OrderDetailsTest {
 
         assertThat(orderDetails.markOrderProductAsPaid("a-unique-order-product-id")).isTrue();
 
-        assertThat(orderDetails.getBillTotal()).isEqualTo(BigDecimal.ZERO.setScale(2));
+        assertThat(orderDetails.getBillTotal()).isEqualTo(BigDecimal.ZERO.setScale(2, RoundingMode.HALF_EVEN));
     }
 
     @Test
@@ -217,18 +213,4 @@ class OrderDetailsTest {
 
         assertThat(orderDetails.getBillTotal()).isEqualTo(new BigDecimal("5.85"));
     }
-
-    @ParameterizedTest
-    @CsvSource({"1,0.01", "100,1", "34,0.34", "0,0.00"})
-    void discountPercentage(int input, String output) {
-        assertThat(orderDetails.calculateDiscountPercentage(input)).isEqualTo(output);
-    }
-
-    @ParameterizedTest
-    @CsvSource({"-10", "101"})
-    void discountPercentageCalculationThrowsWhenInputIsInvalid(int input) {
-        assertThatThrownBy(() -> orderDetails.calculateDiscountPercentage(input))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
-
 }
