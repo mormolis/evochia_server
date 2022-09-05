@@ -23,7 +23,7 @@ class UserJDBCRepositoryTest extends JDBCTest {
 
     @BeforeEach
     void setup() {
-        userJDBCRepository = new UserJDBCRepository(new JdbcTemplate(dataSource), new UuidPersistenceTransformer());
+        userJDBCRepository = new UserJDBCRepository(new JdbcTemplate(testDbDataSource), new UuidPersistenceTransformer());
     }
 
     @Test

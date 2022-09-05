@@ -20,7 +20,7 @@ class ClientCredentialsJDBCRepositoryTest extends JDBCTest {
 
     @BeforeEach
     void setup() {
-        clientCredentialsJDBCRepository = new ClientCredentialsJDBCRepository(new JdbcTemplate(dataSource), new UuidPersistenceTransformer());
+        clientCredentialsJDBCRepository = new ClientCredentialsJDBCRepository(new JdbcTemplate(testDbDataSource), new UuidPersistenceTransformer());
     }
 
     @Test

@@ -1,7 +1,9 @@
-package com.multipartyloops.evochia.core.order;
+package com.multipartyloops.evochia.core.order.aggregates;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.multipartyloops.evochia.core.order.aggregates.OrderDetails;
+import com.multipartyloops.evochia.core.order.aggregates.OrderProduct;
 import com.multipartyloops.evochia.core.product.dto.ProductOptionDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

@@ -1,5 +1,7 @@
 package com.multipartyloops.evochia.persistance.order;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.multipartyloops.evochia.core.order.aggregates.OrderDetails;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
@@ -7,10 +9,22 @@ import java.time.temporal.ChronoUnit;
 import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.fail;
 
 public class OrderJDBCRepositoryTest extends OrderJDBCTest {
 
-    private OrderJDBCRepository orderJDBCRepository = new OrderJDBCRepository(jdbcTemplate, uuidPersistenceTransformer);
+
+    public static final OrderDetails SOME_ORDER_DETAILS = someOrderDetails();
+
+    private static OrderDetails someOrderDetails()  {
+        try {
+            return OBJECT_MAPPER.readValue("{\"orderProducts\":[{\"id\":\"a-unique-order-product-id\",\"productId\":\"anId\",\"options\":[{\"productOptionId\":\"an-id\",\"productId\":\"a-product-id\",\"variation\":\"aVariation\",\"price\":0.5},{\"productOptionId\":\"an-id\",\"productId\":\"a-product-id\",\"variation\":\"aVariation\",\"price\":1}],\"discountPercentage\":10,\"notes\":\"anote\",\"paid\":false,\"terminalId\":\"a-terminal-id\",\"productName\":\"aproduct\",\"price\":2.5,\"canceled\":false},{\"id\":\"another-unique-order-product-id\",\"productId\":\"anId\",\"options\":[{\"productOptionId\":\"an-id\",\"productId\":\"a-product-id\",\"variation\":\"aVariation\",\"price\":0.5},{\"productOptionId\":\"an-id\",\"productId\":\"a-product-id\",\"variation\":\"aVariation\",\"price\":1}],\"discountPercentage\":10,\"notes\":\"anote\",\"paid\":false,\"terminalId\":\"a-terminal-id\",\"productName\":\"aproduct\",\"price\":5,\"canceled\":false}],\"totalPrice\":9.45}", OrderDetails.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private OrderJDBCRepository orderJDBCRepository = new OrderJDBCRepository(jdbcTemplate, uuidPersistenceTransformer, OBJECT_MAPPER);
 
     @Test
     void retrievesOrder() {
@@ -19,7 +33,7 @@ public class OrderJDBCRepositoryTest extends OrderJDBCTest {
         final var tableGroupId = insertNewTableGroup();
         insertNewUser(userId);
         insertNewTable(tableId, tableGroupId);
-        final var orderInfoDto = insertAnOrderFor(tableId, userId, true, true, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS), "aComment", "aDetail");
+        final var orderInfoDto = insertAnOrderFor(tableId, userId, true, true, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS), "aComment", SOME_ORDER_DETAILS);
 
         final var orderById = orderJDBCRepository.getOrderById(orderInfoDto.getOrderId());
 
@@ -35,7 +49,7 @@ public class OrderJDBCRepositoryTest extends OrderJDBCTest {
         insertNewUser(userId);
         insertNewTable(tableId, tableGroupId);
 
-        final var orderInfo = orderJDBCRepository.addNewOrder(tableId, userId, "aComment", "aDetail");
+        final var orderInfo = orderJDBCRepository.addNewOrder(tableId, userId, "aComment", SOME_ORDER_DETAILS);
 
         final var retrieved = orderJDBCRepository.getOrderById(orderInfo.getOrderId());
         assertThat(retrieved).isPresent();
@@ -49,9 +63,9 @@ public class OrderJDBCRepositoryTest extends OrderJDBCTest {
         final var tableGroupId = insertNewTableGroup();
         insertNewUser(userId);
         insertNewTable(tableId, tableGroupId);
-        final var orderInfoDto = insertAnOrderFor(tableId, userId, true, true, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS), "aComment", "aDetail");
-        final var anotherOrderInfoDto = insertAnOrderFor(tableId, userId, true, true, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS), "aComment", "aDetail");
-        insertAnOrderFor(tableId, userId, false, true, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS), "aComment", "aDetail");
+        final var orderInfoDto = insertAnOrderFor(tableId, userId, true, true, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS), "aComment", SOME_ORDER_DETAILS);
+        final var anotherOrderInfoDto = insertAnOrderFor(tableId, userId, true, true, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS), "aComment", SOME_ORDER_DETAILS);
+        insertAnOrderFor(tableId, userId, false, true, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS), "aComment", SOME_ORDER_DETAILS);
 
         final var activeOrdersByTableId = orderJDBCRepository.getActiveOrdersByTableId(tableId);
 
@@ -68,9 +82,9 @@ public class OrderJDBCRepositoryTest extends OrderJDBCTest {
         insertNewUser(userId);
         insertNewTable(tableId, tableGroupId);
         insertNewTable(anotherTableId, tableGroupId);
-        final var orderInfoDto = insertAnOrderFor(tableId, userId, true, true, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS), "aComment", "aDetail");
-        final var anotherOrderInfoDto = insertAnOrderFor(tableId, userId, true, true, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS), "aComment", "aDetail");
-        final var anOrderInDifferentTable = insertAnOrderFor(anotherTableId, userId, true, true, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS), "aComment", "aDetail");
+        final var orderInfoDto = insertAnOrderFor(tableId, userId, true, true, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS), "aComment", SOME_ORDER_DETAILS);
+        final var anotherOrderInfoDto = insertAnOrderFor(tableId, userId, true, true, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS), "aComment", SOME_ORDER_DETAILS);
+        final var anOrderInDifferentTable = insertAnOrderFor(anotherTableId, userId, true, true, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS), "aComment", SOME_ORDER_DETAILS);
 
         final var activeOrders = orderJDBCRepository.getActiveOrders();
 
@@ -86,9 +100,9 @@ public class OrderJDBCRepositoryTest extends OrderJDBCTest {
         insertNewUser(userId);
         insertNewTable(tableId, tableGroupId);
         insertNewTable(anotherTableId, tableGroupId);
-        final var orderInfoDto = insertAnOrderFor(tableId, userId, false, true, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS), "aComment", "aDetail");
-        final var anotherOrderInfoDto = insertAnOrderFor(tableId, userId, true, false, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS), "aComment", "aDetail");
-        final var anOrderInDifferentTable = insertAnOrderFor(anotherTableId, userId, true, true, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS), "aComment", "aDetail");
+        final var orderInfoDto = insertAnOrderFor(tableId, userId, false, true, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS), "aComment", SOME_ORDER_DETAILS);
+        final var anotherOrderInfoDto = insertAnOrderFor(tableId, userId, true, false, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS), "aComment", SOME_ORDER_DETAILS);
+        final var anOrderInDifferentTable = insertAnOrderFor(anotherTableId, userId, true, true, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS), "aComment", SOME_ORDER_DETAILS);
 
         final var allOrders = orderJDBCRepository.getAllOrders();
 
@@ -104,8 +118,8 @@ public class OrderJDBCRepositoryTest extends OrderJDBCTest {
         insertNewUser(userId);
         insertNewTable(tableId, tableGroupId);
         insertNewTable(anotherTableId, tableGroupId);
-        final var orderInfoDto = insertAnOrderFor(tableId, userId, false, true, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS), "aComment", "aDetail");
-        orderInfoDto.setDetails("updated-details");
+        final var orderInfoDto = insertAnOrderFor(tableId, userId, false, true, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS), "aComment", SOME_ORDER_DETAILS);
+        orderInfoDto.setDetails(SOME_ORDER_DETAILS);
         orderInfoDto.setComments("updated-comments");
         orderInfoDto.setTableId(anotherTableId);
 
@@ -113,7 +127,7 @@ public class OrderJDBCRepositoryTest extends OrderJDBCTest {
 
         final var retrievedOrder = orderJDBCRepository.getOrderById(orderInfoDto.getOrderId());
         assertThat(retrievedOrder).isPresent();
-        assertThat(retrievedOrder.get().getDetails()).isEqualTo("updated-details");
+        assertThat(retrievedOrder.get().getDetails()).isEqualTo(SOME_ORDER_DETAILS);
         assertThat(retrievedOrder.get().getComments()).isEqualTo("updated-comments");
         assertThat(retrievedOrder.get().getTableId()).isEqualTo(anotherTableId);
     }
@@ -125,7 +139,7 @@ public class OrderJDBCRepositoryTest extends OrderJDBCTest {
         final var tableGroupId = insertNewTableGroup();
         insertNewUser(userId);
         insertNewTable(tableId, tableGroupId);
-        final var orderInfoDto = insertAnOrderFor(tableId, userId, false, false, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS), "aComment", "aDetail");
+        final var orderInfoDto = insertAnOrderFor(tableId, userId, false, false, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS), "aComment", SOME_ORDER_DETAILS);
 
         orderJDBCRepository.cancelOrder(orderInfoDto.getOrderId(), "nope");
 
@@ -142,7 +156,7 @@ public class OrderJDBCRepositoryTest extends OrderJDBCTest {
         final var tableGroupId = insertNewTableGroup();
         insertNewUser(userId);
         insertNewTable(tableId, tableGroupId);
-        final var orderInfoDto = insertAnOrderFor(tableId, userId, false, false, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS), "aComment", "aDetail");
+        final var orderInfoDto = insertAnOrderFor(tableId, userId, false, false, LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS), "aComment", SOME_ORDER_DETAILS);
 
         orderJDBCRepository.deleteOrder(orderInfoDto.getOrderId());
 

@@ -36,7 +36,7 @@ class ProductCategoryJDBCRepositoryTest extends JDBCTest {
 
     @BeforeEach
     void init() {
-        productCategoryJDBCRepository = new ProductCategoryJDBCRepository(new JdbcTemplate(dataSource), new UuidPersistenceTransformer(), productJDBCRepositoryMock, productOptionJDBCRepositoryMock);
+        productCategoryJDBCRepository = new ProductCategoryJDBCRepository(new JdbcTemplate(testDbDataSource), new UuidPersistenceTransformer(), productJDBCRepositoryMock, productOptionJDBCRepositoryMock);
     }
 
 

@@ -13,7 +13,7 @@ import java.util.UUID;
 
 public abstract class ProductJDBCTest extends JDBCTest {
 
-    protected JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    protected JdbcTemplate jdbcTemplate = new JdbcTemplate(testDbDataSource);
     protected UuidPersistenceTransformer uuidPersistenceTransformer = new UuidPersistenceTransformer();
 
     protected ProductDto insertAProduct(String categoryId, String terminalId) {

@@ -1,5 +1,6 @@
-package com.multipartyloops.evochia.core.order;
+package com.multipartyloops.evochia.core.order.aggregates;
 
+import com.multipartyloops.evochia.core.order.aggregates.OrderProduct;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 

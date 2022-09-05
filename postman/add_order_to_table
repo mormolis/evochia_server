@@ -1,0 +1,23 @@
+curl --location --request POST 'localhost:8080/orders/order/new' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+  "tableId": "{{tableId}}",
+  "userId": "{{userId}}",
+  "comments": "{{comments}}",
+  "details": [
+      {
+        "productId": "{{aProductId}}",
+        "options": [ "{{optionId-1}}", "{{optionId-2}}"],
+        "discountPercentage": 10,
+        "notes": "anote",
+        "terminalId": "a-terminal-id"
+      },
+      {
+        "productId": "{{anotherProductId}}",
+        "options": [ "{{optionId-1}}", "{{optionId-2}}"],
+        "discountPercentage": 0,
+        "notes": "anote",
+        "terminalId": "a-terminal-id"
+      }
+    ]
+}'

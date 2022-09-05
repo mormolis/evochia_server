@@ -31,7 +31,7 @@ public class TableServiceTest extends TableJDBCTest {
     @BeforeEach
     void setup() {
         tableGroupingRepository = new TableGroupingJDBCRepository(jdbcTemplate, uuidPersistenceTransformer);
-        transactionTemplate = new TransactionTemplate(new DataSourceTransactionManager(dataSource));
+        transactionTemplate = new TransactionTemplate(new DataSourceTransactionManager(testDbDataSource));
         tableService = new TableService(tableGroupingRepository, tableInfoRepositoryMock, transactionTemplate);
     }
 

@@ -9,7 +9,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import java.util.UUID;
 
 public abstract class TableJDBCTest extends JDBCTest {
-    protected JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    protected JdbcTemplate jdbcTemplate = new JdbcTemplate(testDbDataSource);
     protected UuidPersistenceTransformer uuidPersistenceTransformer = new UuidPersistenceTransformer();
 
     protected TableGroupingDto insertAGroup(String name, boolean enabled) {

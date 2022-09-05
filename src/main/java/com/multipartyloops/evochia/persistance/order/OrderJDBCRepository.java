@@ -1,5 +1,8 @@
 package com.multipartyloops.evochia.persistance.order;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.multipartyloops.evochia.core.order.aggregates.OrderDetails;
 import com.multipartyloops.evochia.core.order.dtos.OrderInfoDto;
 import com.multipartyloops.evochia.persistance.UuidPersistenceTransformer;
 import com.multipartyloops.evochia.persistance.exceptions.UpdateFailedException;
@@ -28,14 +31,16 @@ public class OrderJDBCRepository implements OrderRepository<OrderInfoDto> {
 
     private final JdbcTemplate jdbcTemplate;
     private final UuidPersistenceTransformer uuidPersistenceTransformer;
+    private final ObjectMapper objectMapper;
 
-    public OrderJDBCRepository(JdbcTemplate jdbcTemplate, UuidPersistenceTransformer uuidPersistenceTransformer) {
+    public OrderJDBCRepository(JdbcTemplate jdbcTemplate, UuidPersistenceTransformer uuidPersistenceTransformer, ObjectMapper objectMapper) {
         this.jdbcTemplate = jdbcTemplate;
         this.uuidPersistenceTransformer = uuidPersistenceTransformer;
+        this.objectMapper = objectMapper;
     }
 
     @Override
-    public OrderInfoDto addNewOrder(String tableId, String userId, String comments, String details) {
+    public OrderInfoDto addNewOrder(String tableId, String userId, String comments, OrderDetails details) {
         OrderInfoDto orderInfoDto = new OrderInfoDto(
                 UUID.randomUUID().toString(),
                 tableId,
@@ -54,7 +59,7 @@ public class OrderJDBCRepository implements OrderRepository<OrderInfoDto> {
                             orderInfoDto.getCanceled(),
                             orderInfoDto.getLastUpdated(),
                             orderInfoDto.getComments(),
-                            orderInfoDto.getDetails());
+                            orderInfoDto.getDetails().toJsonString(objectMapper));
         return orderInfoDto;
     }
 
@@ -100,7 +105,7 @@ public class OrderJDBCRepository implements OrderRepository<OrderInfoDto> {
                                                      orderInfoDto.getCanceled(),
                                                      orderInfoDto.getActive(),
                                                      LocalDateTime.now(),
-                                                     orderInfoDto.getDetails(),
+                                                     orderInfoDto.getDetails().toJsonString(objectMapper),
                                                      uuidPersistenceTransformer.fromString(orderInfoDto.getOrderId())
         );
 
@@ -130,8 +135,16 @@ public class OrderJDBCRepository implements OrderRepository<OrderInfoDto> {
                 resultSet.getBoolean("canceled"),
                 resultSet.getTimestamp("last_updated").toLocalDateTime(),
                 resultSet.getString("comments"),
-                resultSet.getString("details")
+                convertToObject(resultSet.getString("details"))
         );
+    }
+
+    private OrderDetails convertToObject(String details) {
+        try {
+            return objectMapper.readValue(details, OrderDetails.class);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private void throwIfUpdateFailed(int affectedRows) {

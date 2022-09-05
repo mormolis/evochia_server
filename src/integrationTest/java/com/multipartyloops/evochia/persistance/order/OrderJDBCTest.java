@@ -1,5 +1,7 @@
 package com.multipartyloops.evochia.persistance.order;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.multipartyloops.evochia.core.order.aggregates.OrderDetails;
 import com.multipartyloops.evochia.core.order.dtos.OrderInfoDto;
 import com.multipartyloops.evochia.persistance.UuidPersistenceTransformer;
 import com.multipartyloops.evochia.persistance.table.TableJDBCTest;
@@ -10,10 +12,11 @@ import java.util.UUID;
 
 abstract public class OrderJDBCTest extends TableJDBCTest {
 
-    protected JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    protected JdbcTemplate jdbcTemplate = new JdbcTemplate(testDbDataSource);
     protected UuidPersistenceTransformer uuidPersistenceTransformer = new UuidPersistenceTransformer();
+    protected static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-    protected OrderInfoDto insertAnOrderFor(String tableId, String userId, boolean active, boolean canceled, LocalDateTime updated, String comments, String details) {
+    protected OrderInfoDto insertAnOrderFor(String tableId, String userId, boolean active, boolean canceled, LocalDateTime updated, String comments, OrderDetails details) {
         OrderInfoDto orderInfoDto = new OrderInfoDto(UUID.randomUUID().toString(), tableId, userId, active, canceled, updated, comments, details);
         jdbcTemplate.update("INSERT INTO order_info (order_id, table_id, user_id, active, canceled, last_updated, comments, details) VALUES  (?, ?, ?, ?, ?, ?, ?, ?)",
                             uuidPersistenceTransformer.fromString(orderInfoDto.getOrderId()),
@@ -23,7 +26,7 @@ abstract public class OrderJDBCTest extends TableJDBCTest {
                             canceled,
                             orderInfoDto.getLastUpdated(),
                             comments,
-                            details);
+                            details.toJsonString(OBJECT_MAPPER));
         return orderInfoDto;
     }
 

@@ -24,7 +24,7 @@ class AccessTokenJDBCRepositoryTest extends JDBCTest {
 
     @BeforeEach
     void setup(){
-        accessTokenJDBCRepository = new AccessTokenJDBCRepository(new JdbcTemplate(dataSource), new UuidPersistenceTransformer());
+        accessTokenJDBCRepository = new AccessTokenJDBCRepository(new JdbcTemplate(testDbDataSource), new UuidPersistenceTransformer());
     }
 
     @Test
@@ -106,7 +106,7 @@ class AccessTokenJDBCRepositoryTest extends JDBCTest {
 
 
     private String createClientId(){
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(testDbDataSource);
         String clientId = UUID.randomUUID().toString();
         jdbcTemplate.update("INSERT INTO client_credentials (client_id, secret, device) VALUES (?, ?, ?)",
                 convertUuidToBinary(clientId),
@@ -117,7 +117,7 @@ class AccessTokenJDBCRepositoryTest extends JDBCTest {
     }
 
     private String createUserId(){
-        JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+        JdbcTemplate jdbcTemplate = new JdbcTemplate(testDbDataSource);
         String userId = UUID.randomUUID().toString();
         jdbcTemplate.update("INSERT INTO users (user_id, username, password, name, telephone) VALUES (?, ?, ?, ?, ?)",
                 convertUuidToBinary(userId), UUID.randomUUID().toString(), "aPassword", "name", "telephungen"

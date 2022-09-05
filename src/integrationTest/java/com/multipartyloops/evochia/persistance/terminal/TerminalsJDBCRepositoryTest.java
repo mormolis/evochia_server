@@ -14,7 +14,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class TerminalsJDBCRepositoryTest extends JDBCTest {
 
-    JdbcTemplate jdbcTemplate = new JdbcTemplate(dataSource);
+    JdbcTemplate jdbcTemplate = new JdbcTemplate(testDbDataSource);
     UuidPersistenceTransformer uuidPersistenceTransformer = new UuidPersistenceTransformer();
     TerminalsJDBCRepository terminalsJDBCRepository;
 
